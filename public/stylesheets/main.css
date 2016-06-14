@@ -67,4 +67,11 @@ html {
 h2 {
   font-size: 7rem; }
 
+.createRoute__input {
+  display: block;
+  width: 25%; }
+
+.heightSubmit__body {
+  font-size: 1.5rem; }
+
 /*# sourceMappingURL=main.css.map */
