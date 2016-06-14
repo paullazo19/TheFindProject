@@ -9,7 +9,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <button><Link to="/createRoute">Create new route</Link></button>
+        <button><Link to="/createRouteLabel">Create new route</Link></button>
         <button>Navigate existing route</button>
       </div>
     )
