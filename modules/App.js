@@ -10,14 +10,14 @@ export default React.createClass({
       inches: 0
     }
   },
-  componentDidMount(){
-    navigator.geolocation.watchPosition((position)=>{
-      var stepNum = position.coords.speed / 0.565;
-      this.setState({
-        steps: this.state.steps + stepNum
-      })
-    }, null, {enableHighAccuracy: true});
-  },
+  // componentDidMount(){
+  //   navigator.geolocation.watchPosition((position)=>{
+  //     var stepNum = position.coords.speed / 0.565;
+  //     this.setState({
+  //       steps: this.state.steps + stepNum
+  //     })
+  //   }, null, {enableHighAccuracy: true});
+  // },
   submitHeightForm(e){
     e.preventDefault();
       var feet = ReactDOM.findDOMNode(this.refs.ft).value;
@@ -42,9 +42,6 @@ export default React.createClass({
           <input ref="in" type="text" name="inches" autoComplete="off"/> inches<br/>
           <input type="submit" value="submit"/>
         </form>
-        <h2 className="heading">
-          {this.state.steps}
-        </h2>
       </div>
     )
   }

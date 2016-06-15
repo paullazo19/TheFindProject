@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import $ from 'jquery'
 import Serialize from 'form-serialize'
 import Validator from 'validator'
+import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 
 export default React.createClass({
   getInitialState(){
@@ -35,21 +36,6 @@ export default React.createClass({
     else {
           return false
     }
-    // if (this.state.buildingAddress.hasError == true) {
-    //       return true;
-    // } else {
-    //       return false
-    // }
-    // if (this.state.floorNumber.hasError == true) {
-    //       return true;
-    // } else {
-    //       return false
-    // }
-    // if (this.state.roomDescription.hasError == true) {
-    //       return true;
-    // } else {
-    //       return false
-    // }
   },
   handleBuildingInputChange(e){
     var inputElement = ReactDOM.findDOMNode(e.target).value;
@@ -91,23 +77,18 @@ export default React.createClass({
   handleCreateRouteSubmit(e){
     //POST request
     e.preventDefault();
-    var serializedForm = Serialize(this.refs.routeLabelForm, {hash: true})
-    $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
-      this.getRouteLabels();
-      // clear text after input
-      this.refs.building.value="";
-      this.refs.floor.value="";
-      this.refs.room.value="";
-    });
+    // var serializedForm = Serialize(this.refs.routeLabelForm, {hash: true})
+    // $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
+    //   this.getRouteLabels();
+    //   // clear text after input
+    //   this.refs.building.value="";
+    //   this.refs.floor.value="";
+    //   this.refs.room.value="";
+    // });
     //Direct user to starting screen for route creation
+    browserHistory.push('/CreateRoutePath')
 
   },
-  // componentWillUpdate(){
-  //   this.checkAllInputStates();
-  // },
-  // componentDidMount(){
-  //   this.getRouteLabels();
-  // },
   render() {
     console.log(this.state.routeLabels);
     return (
