@@ -79,6 +79,12 @@ h2 {
   border: 2px solid red;
   width: 50%; }
 
+.input--error {
+  color: red; }
+
+.hide--error {
+  display: none; }
+
 .heightSubmit__body {
   font-size: 1.5rem; }
 
