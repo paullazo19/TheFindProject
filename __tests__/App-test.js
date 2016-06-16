@@ -8,8 +8,7 @@ jest.unmock("../modules/App");
 
 describe('app component', ()=> {
   var appRendered,
-      e,
-      strideMeters
+      e
 
   beforeEach(()=> {
     appRendered = TestUtils.renderIntoDocument(
@@ -20,13 +19,9 @@ describe('app component', ()=> {
       preventDefault: ()=> { }
     };
 
-    strideMeters = 0.762;
-
-
-
     spyOn(e, "preventDefault");
     spyOn(appRendered, "submitHeightForm").and.callThrough();
-    spyOn(appRendered, "convertToStrideMeters");
+    spyOn(appRendered, "convertToStrideMeters").and.callThrough();
     spyOn(appRendered, "directUserToLanding");
   });
 

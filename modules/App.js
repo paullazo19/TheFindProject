@@ -6,7 +6,6 @@ import Validator from 'validator'
 export default React.createClass({
   getInitialState(){
     return{
-      steps: 0,
       feet: 0,
       inches: 0,
       feetError: false,
@@ -25,14 +24,6 @@ export default React.createClass({
       inchesError: !Validator.isInt(inputElement, {min:0, max:11})
     })
   },
-  // componentDidMount(){
-  //   navigator.geolocation.watchPosition((position)=>{
-  //     var stepNum = position.coords.speed / 0.565;
-  //     this.setState({
-  //       steps: this.state.steps + stepNum
-  //     })
-  //   }, null, {enableHighAccuracy: true});
-  // },
   submitHeightForm(e){
     e.preventDefault();
 
