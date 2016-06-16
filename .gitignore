@@ -1,2 +1,14 @@
+# Node build artifacts
+node_modules
+npm-debug.log
 .sass-cache/
-*.css.map
+
+# Local development
+*.env
+*.dev
+.DS_Store
+public/javascripts/bundle.js
+
+# Docker
+Dockerfile
+docker-compose.yml
