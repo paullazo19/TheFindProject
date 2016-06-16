@@ -17,9 +17,6 @@ export default React.createClass({
       },
       roomDescription: {
         hasError: false
-      },
-      allValid: {
-        hasError: false
       }
     }
   },
@@ -39,30 +36,30 @@ export default React.createClass({
   },
   handleBuildingInputChange(e){
     var inputElement = ReactDOM.findDOMNode(e.target).value;
-      this.setState({
-        buildingAddress: {
-          hasError: !Validator.isLength(inputElement, {min:5, max:500})
-        }
-      })
-      this.checkAllInputStates();
+    this.setState({
+      buildingAddress: {
+        hasError: !Validator.isLength(inputElement, {min:5, max:500})
+      }
+    })
+    this.checkAllInputStates();
   },
   handleFloorInputChange(e){
     var inputElement = ReactDOM.findDOMNode(e.target).value;
-      this.setState({
-        floorNumber: {
-          hasError: !Validator.isInt(inputElement, {min:1, max:500})
-        }
-      })
-      this.checkAllInputStates();
+    this.setState({
+      floorNumber: {
+        hasError: !Validator.isInt(inputElement, {min:1, max:500})
+      }
+    })
+    this.checkAllInputStates();
   },
   handleRoomInputChange(e){
     var inputElement = ReactDOM.findDOMNode(e.target).value;
-      this.setState({
-        roomDescription: {
-          hasError: !Validator.isLength(inputElement, {min:5, max:500})
-        }
-      })
-      this.checkAllInputStates();
+    this.setState({
+      roomDescription: {
+        hasError: !Validator.isLength(inputElement, {min:5, max:500})
+      }
+    })
+    this.checkAllInputStates();
   },
   getDefaultProps(){
     return {
@@ -77,16 +74,22 @@ export default React.createClass({
   handleCreateRouteSubmit(e){
     //POST request
     e.preventDefault();
-    // var serializedForm = Serialize(this.refs.routeLabelForm, {hash: true})
-    // $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
-    //   this.getRouteLabels();
-    //   // clear text after input
-    //   this.refs.building.value="";
-    //   this.refs.floor.value="";
-    //   this.refs.room.value="";
-    // });
-    //Direct user to starting screen for route creation
-    browserHistory.push('/CreateRoutePath')
+    if (this.state.buildingAddress.hasError == false &&
+        this.state.floorNumber.hasError == false &&
+        this.state.roomDescription.hasError == false) {
+
+      var serializedForm = Serialize(this.refs.routeLabelForm, {hash: true})
+      $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
+        this.getRouteLabels();
+      });
+      //Direct user to starting screen for route creation
+      browserHistory.push('/CreateRoutePath')
+      console.log("posted");
+    } else {
+      console.log("Did not post");
+      this.checkAllInputStates();
+    }
+
 
   },
   render() {

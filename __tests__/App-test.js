@@ -6,44 +6,42 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 
 jest.unmock("../modules/App");
 
-describe('User signup app', () => {
+describe('app component', ()=> {
   var appRendered,
       e,
-      browserHistory
+      strideMeters
 
-  beforeEach(()=>{
+  beforeEach(()=> {
     appRendered = TestUtils.renderIntoDocument(
       <App/>
     );
 
     e = {
-      preventDefault: ()=>{ }
+      preventDefault: ()=> { }
     };
 
-    browserHistory = {
-      push: ()=> { }
-    };
+    strideMeters = 0.762;
+
+
+
+    spyOn(e, "preventDefault");
+    spyOn(appRendered, "submitHeightForm").and.callThrough();
+    spyOn(appRendered, "convertToStrideMeters");
+    spyOn(appRendered, "directUserToLanding");
   });
 
+  it("prevents default behavior", ()=> {
+    e.preventDefault();
+    expect(e.preventDefault).toBeCalled();
+  });
 
-  describe('App height input component', () => {
+  it('directs user to landing page on height submit', ()=> {
+    appRendered.submitHeightForm(e);
+    expect(appRendered.directUserToLanding).toBeCalled();
+  });
 
-    beforeEach(()=> {
-      spyOn(e, "preventDefault");
-      spyOn(appRendered, "submitHeightForm").and.callThrough();
-      spyOn(appRendered, "convertToStrideMeters");
-      spyOn(browserHistory, "push");
-    });
-
-    it('pushes to landing page on height submit', () => {
-      // This places our component into our test to find off of
-      var appRendered = TestUtils.renderIntoDocument(
-        <App/>
-      )
-
-      appRendered.submitHeightForm(e);
-      // console.log(browserHistory);
-      // expect(browserHistory.push).toBeCalled();
-    });
+  it('should convert height in feet to stride in meters', ()=> {
+    appRendered.convertToStrideMeters(5, 9);
+    expect(appRendered.convertToStrideMeters(5, 9)).toEqual(0.762);
   });
 })
