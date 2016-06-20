@@ -1,22 +1,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Router, Route, hashHistory, IndexRoute } from 'react-router'
 import $ from 'jquery'
 import Serialize from 'form-serialize'
 import Validator from 'validator'
-import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 
 export default React.createClass({
+  getDefaultProps(){
+    return {
+      routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label"
+    }
+  },
   getInitialState(){
     return{
       routeLabels: [],
       buildingAddress: {
-        hasError: false
+        hasError: 0
       },
       floorNumber: {
-        hasError: false
+        hasError: 0
       },
       roomDescription: {
-        hasError: false
+        hasError: 0
       }
     }
   },
@@ -61,11 +66,6 @@ export default React.createClass({
     })
     this.checkAllInputStates();
   },
-  getDefaultProps(){
-    return {
-      routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label"
-    }
-  },
   getRouteLabels(){
     $.get(this.props.routeLabelSource, (resp)=> {
       this.setState({ routeLabels: resp })
@@ -74,26 +74,26 @@ export default React.createClass({
   handleCreateRouteSubmit(e){
     //POST request
     e.preventDefault();
-    if (this.state.buildingAddress.hasError == false &&
-        this.state.floorNumber.hasError == false &&
-        this.state.roomDescription.hasError == false) {
+    if (this.state.buildingAddress.hasError === false &&
+        this.state.floorNumber.hasError === false &&
+        this.state.roomDescription.hasError === false) {
 
       var serializedForm = Serialize(this.refs.routeLabelForm, {hash: true})
       $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
         this.getRouteLabels();
       });
       //Direct user to starting screen for route creation
-      browserHistory.push('/CreateRoutePath')
+      this.directUserToCreateRoutePath();
       console.log("posted");
     } else {
       console.log("Did not post");
       this.checkAllInputStates();
     }
-
-
+  },
+  directUserToCreateRoutePath(){
+    hashHistory.push('/CreateRoutePath')
   },
   render() {
-    console.log(this.state.routeLabels);
     return (
       <div>
         <form className={this.checkAllInputStates()? "form--error" : ""} method="POST" ref="routeLabelForm" action="#" onSubmit={this.handleCreateRouteSubmit}>

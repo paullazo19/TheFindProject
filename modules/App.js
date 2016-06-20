@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, browserHistory, IndexRoute } from 'react-router'
+import { Router, Route, hashHistory, IndexRoute } from 'react-router'
 import Validator from 'validator'
 
 export default React.createClass({
@@ -8,8 +8,8 @@ export default React.createClass({
     return{
       feet: 0,
       inches: 0,
-      feetError: false,
-      inchesError: false
+      feetError: 0,
+      inchesError: 0
     }
   },
   handleFeetInput(e){
@@ -26,15 +26,16 @@ export default React.createClass({
   },
   submitHeightForm(e){
     e.preventDefault();
+    if (this.state.feetError === false &&
+        this.state.inchesError === false ){
 
-    if (this.state.feetError == false &&
-        this.state.inchesError == false) {
           var feet = ReactDOM.findDOMNode(this.refs.ft).value;
           var inches = ReactDOM.findDOMNode(this.refs.in).value;
 
           this.convertToStrideMeters(feet, inches);
           this.directUserToLanding();
           console.log("submit successful");
+
     } else {
         console.log("did not submit");
         this.checkAllInputStates();
@@ -52,7 +53,7 @@ export default React.createClass({
     }
   },
   directUserToLanding(){
-    browserHistory.push('/landing')
+    hashHistory.push('/landing')
   },
   convertToStrideMeters(feet, inches){
     var heightInches = Number(feet*12) + Number(inches)
