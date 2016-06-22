@@ -9,9 +9,9 @@ import CreateRoutePath from './modules/CreateRoutePath'
 
 render((
   <Router history={hashHistory}>
-    <Route path="/" component={CreateRoutePath}/>
+    <Route path="/" component={CreateRouteLabel}/>
     <Route path="/landing" component={Landing}/>
-    <Route path="/createRouteLabel" component={CreateRouteLabel}/>
-    <Route path="/createRoutePath" component={CreateRoutePath}/>
+    <Route path="/createRouteLabel/:building/:floor/:room" component={CreateRouteLabel}/>
+    <Route path="/createRoutePath/:building/:floor/:room" component={CreateRoutePath}/>
   </Router>
 ), document.getElementById('app'))

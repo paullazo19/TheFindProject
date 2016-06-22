@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-import CreateRouteLabel from '../modules/CreateRouteLabel';
+import CreateRoutePath from '../modules/CreateRoutePath';
 import { Router, Route, hashHistory, IndexRoute } from 'react-router'
 
-jest.unmock("../modules/CreateRouteLabel");
+jest.unmock("../modules/CreateRoutePath");
 
-describe('Create Route Label component', ()=> {
+describe('Create Route Path component', ()=> {
   var formRendered,
   e,
   stubbedData
