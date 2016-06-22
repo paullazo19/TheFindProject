@@ -13,10 +13,12 @@ describe('Create Route Path component', ()=> {
 
   beforeEach(()=>{
     var paramData = {
-      building: "buil"
+      building: "buil",
+      floor: 1,
+      room: "room"
     }
     formRendered = TestUtils.renderIntoDocument(
-      <CreateRouteLabel params = {paramData}/>
+      <CreateRoutePath params = {paramData}/>
     );
 
     e = {
@@ -24,10 +26,23 @@ describe('Create Route Path component', ()=> {
     };
 
     spyOn(e, "preventDefault");
-    spyOn(formRendered, "directUserToCreateRoutePath");
-    spyOn(formRendered, "handleBuildingInputChange");
-    spyOn(formRendered, "checkAllInputStates").and.callThrough();
+    spyOn(formRendered, "componentWillUpdate").and.callThrough();
+    spyOn(formRendered, "handleTurning").and.callThrough();
+    spyOn(formRendered, "handleStepCluster").and.callThrough();
+    spyOn(formRendered, "convertStepNum").and.callThrough();
 
+    stubbedData = {
+      steps: 0,
+      deltaHeading: 0,
+      currentHeading: 0,
+      leftTurn: {
+        detected: false
+      },
+      rightTurn: {
+        detected: false
+      }
+    }
+    formRendered.setState(stubbedData);
   })
 
   it("prevents default behavior", ()=> {
@@ -35,72 +50,44 @@ describe('Create Route Path component', ()=> {
     expect(e.preventDefault).toBeCalled();
   });
 
-  it('directs user to create route path when all error states are false', ()=> {
-    stubbedData = {
-      buildingAddress: {
-        hasError: false
-      },
-      floorNumber: {
-        hasError: false
-      },
-      roomDescription: {
-        hasError: false
-      }
-    }
-    formRendered.setState(stubbedData);
-    formRendered.handleCreateRouteSubmit();
-    expect(formRendered.directUserToCreateRoutePath).toBeCalled();
-  });
+  describe("When a user clicks start recording", ()=> {
 
-  it('checks all input states when an error state is true', ()=> {
-    formRendered.handleCreateRouteSubmit();
-    expect(formRendered.checkAllInputStates).toBeCalled();
-  });
+    it('should close modal screen', ()=> {
+      TestUtils.Simulate.click(formRendered.refs.startRecord);
+      expect(formRendered.state.modal.isOn).toBe(false);
+    });
 
-  it('returns true if buildingAddress error state is true', ()=> {
-    stubbedData = {
-      buildingAddress: {
-        hasError: true
-      }
-    }
-    formRendered.setState(stubbedData)
-    expect(formRendered.checkAllInputStates()).toBe(true);
+    it('should start the watch position function', ()=> {
+      TestUtils.Simulate.click(formRendered.refs.startRecord);
+      expect(formRendered.state.startRecord.isOn).toBe(true);
+    });
   })
 
-  it('returns true if floorNumber error state is true', ()=> {
-    stubbedData = {
-      floorNumber: {
-        hasError: true
+  describe('when a createRoutePath user walks and turns a direction', ()=> {
+    it('should add turn right to the route sequence when user turns right',  ()=> {
+      stubbedData = {
+        turnDetected: 100
       }
-    }
-    formRendered.setState(stubbedData)
-    expect(formRendered.checkAllInputStates()).toBe(true);
+      formRendered.setState(stubbedData);
+      formRendered.handleTurning(e);
+      expect(formRendered.state.rightTurn.detected).toBe(true);
+    })
+
+    it('should add turn right to the route sequence when user turns right',  ()=> {
+      stubbedData = {
+        turnDetected: 245
+      }
+      formRendered.setState(stubbedData);
+      formRendered.handleTurning(e);
+      expect(formRendered.state.leftTurn.detected).toBe(true);
+    })
   })
 
-  it('returns true if roomDescription error state is true', ()=> {
-    stubbedData = {
-      roomDescription: {
-        hasError: true
-      }
-    }
-    formRendered.setState(stubbedData)
-    expect(formRendered.checkAllInputStates()).toBe(true);
+  describe('when a createRoutePath user walks', ()=> {
+    it('converts stepNum to add to state.steps', ()=> {
+      expect(formRendered.convertStepNum(1.13)).toEqual(2);
+    })
   })
 
-  it('returns false if all error states are false', ()=> {
-    stubbedData = {
-      buildingAddress: {
-        hasError: false
-      },
-      floorNumber: {
-        hasError: false
-      },
-      roomDescription: {
-        hasError: false
-      }
-    }
-    formRendered.setState(stubbedData);
-    expect(formRendered.checkAllInputStates()).toBe(false);
-  });
 
 })

@@ -6,8 +6,7 @@ import Serialize from 'form-serialize'
 
 
 var stepCluster = [5];
-var currentHeading = 3;
-var turnDetected;
+var stepNum;
 
 export default React.createClass({
   getDefaultProps(){
@@ -20,30 +19,35 @@ export default React.createClass({
     return{
       steps: 0,
       deltaHeading: 0,
+      turnDetected: 0,
+      currentHeading: 0,
       modal: {
         isOn: true
       },
       startRecord: {
         isOn: false
+      },
+      leftTurn: {
+        detected: false
+      },
+      rightTurn: {
+        detected: false
       }
     }
   },
+  convertStepNum(speed){
+    return speed / 0.565
+  },
   componentWillUpdate(){
-    console.log("mounted");
     if (this.state.startRecord.isOn == true) {
-      console.log("started watching");
       navigator.geolocation.watchPosition((position)=>{
-        var stepNum = position.coords.speed / 0.565;
-        turnDetected  = currentHeading - this.state.deltaHeading;
+        // convert stepNum in function
+        this.convertStepNum();
         this.setState({
-          steps: this.state.steps + stepNum,
-          deltaHeading: position.coords.heading
+          steps: this.state.steps + this.convertStepNum(position.coords.speed),
+          deltaHeading: position.coords.heading,
+          turnDetected: this.state.currentHeading - this.state.deltaHeading
         })
-        // if (Math.abs(turnDetected) > 90) {
-        //   alert({turnDetected}, "greater than 90");
-        //   currentHeading = this.state.deltaHeading;
-        //   this.handleStepCluster();
-        // }
         setInterval(()=> {
           this.handleTurning();
         }, 500)
@@ -51,14 +55,24 @@ export default React.createClass({
     }
   },
   handleTurning(e){
-    if (Math.abs(turnDetected) > 60 && Math.abs(turnDetected) < 120) {
+    if (Math.abs(this.state.turnDetected) > 60 && Math.abs(this.state.turnDetected) < 120) {
       stepCluster.push("turn right");
-      currentHeading = this.state.deltaHeading;
+      this.setState({
+          currentHeading: this.state.deltaHeading,
+          rightTurn: {
+            detected: true
+          }
+      })
       this.handleStepCluster();
 
-    } else if (Math.abs(turnDetected) > 240 && Math.abs(turnDetected) < 300){
+    } else if (Math.abs(this.state.turnDetected) > 240 && Math.abs(this.state.turnDetected) < 300) {
       stepCluster.push("turn left");
-      currentHeading = this.state.deltaHeading;
+      this.setState({
+          currentHeading: this.state.deltaHeading,
+          leftTurn: {
+            detected: true
+          }
+      })
       this.handleStepCluster();
     }
   },
@@ -67,7 +81,6 @@ export default React.createClass({
       this.setState({
         steps: 0
       })
-      console.log(this.state.steps, stepCluster);
   },
   submitRoutePath(e){
     e.preventDefault();
@@ -97,17 +110,16 @@ export default React.createClass({
     })
   },
   render() {
-    console.log(stepCluster, this.state.startRecord.isOn);
     return (
       <div>
       <div className={this.state.modal.isOn? "modal--show" : "modal--hide"}>
         <Link className="startRecord--back" to={`/createRouteLabel/${this.props.params.building}/${this.props.params.floor}/${this.props.params.room}`}>Back</Link>
         <div className="routeInfo">Building: {`${this.props.params.building}`}<span className="routeInfo--middle">Floor: {`${this.props.params.floor}`}</span>Room: {`${this.props.params.room}`}</div>
         <p className="startRecord--warning">To ensure optimal route accuracy, please begin route inside the building at the main entrance with your back to the door. Thank you.</p>
-        <a className="startRecord--button" onClick={this.startRecording}>Start Recording</a>
+        <a className="startRecord--button" ref="startRecord" onClick={this.startRecording}>Start Recording</a>
       </div>
       <h2>steps: {this.state.steps}</h2>
-      <h2>current heading: {currentHeading}</h2>
+      <h2>current heading: {this.state.currentHeading}</h2>
       <h2>delta heading: {this.state.deltaHeading}</h2>
 
       <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
