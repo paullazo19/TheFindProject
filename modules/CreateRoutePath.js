@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Router, Route, hashHistory, IndexRoute, Link } from 'react-router'
 import $ from 'jquery'
 import Serialize from 'form-serialize'
+import _ from 'underscore'
 
 
 var stepCluster = [5];
@@ -35,23 +36,29 @@ export default React.createClass({
       }
     }
   },
+  componentDidMount(){
+    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
+  },
   convertStepNum(speed){
     return speed / 0.565
   },
+  onWatchPosition(position){
+    // convert stepNum in function
+    console.log("watched");
+    this.convertStepNum();
+    this.setState({
+      steps: this.state.steps + this.convertStepNum(position.coords.speed),
+      deltaHeading: position.coords.heading,
+      turnDetected: this.state.currentHeading - this.state.deltaHeading
+    })
+    setInterval(()=> {
+      this.handleTurning();
+    }, 1000)
+  },
   componentWillUpdate(){
+    console.log(this.state.steps);
     if (this.state.startRecord.isOn == true) {
-      navigator.geolocation.watchPosition((position)=>{
-        // convert stepNum in function
-        this.convertStepNum();
-        this.setState({
-          steps: this.state.steps + this.convertStepNum(position.coords.speed),
-          deltaHeading: position.coords.heading,
-          turnDetected: this.state.currentHeading - this.state.deltaHeading
-        })
-        setInterval(()=> {
-          this.handleTurning();
-        }, 1000)
-      }, null, {enableHighAccuracy: true});
+      navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
     }
   },
   handleTurning(e){
