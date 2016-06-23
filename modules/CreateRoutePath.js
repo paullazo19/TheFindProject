@@ -50,7 +50,7 @@ export default React.createClass({
         })
         setInterval(()=> {
           this.handleTurning();
-        }, 500)
+        }, 1000)
       }, null, {enableHighAccuracy: true});
     }
   },
