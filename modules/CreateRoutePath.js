@@ -19,7 +19,7 @@ export default React.createClass({
   getInitialState(){
     return{
       steps: 0,
-      deltaHeading: 0,
+      deltaHeading: 25,
       turnDetected: 0,
       currentHeading: 0,
       modal: {
@@ -38,6 +38,9 @@ export default React.createClass({
   },
   componentDidMount(){
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
+    this.setState({
+      currentHeading: this.state.deltaHeading
+    })
   },
   convertStepNum(speed){
     return speed / 0.565
