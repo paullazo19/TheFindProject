@@ -51,9 +51,7 @@ export default React.createClass({
       deltaHeading: position.coords.heading,
       turnDetected: this.state.currentHeading - this.state.deltaHeading
     })
-    setInterval(()=> {
-      this.handleTurning();
-    }, 1000)
+    this.handleTurning();
   },
   componentWillUpdate(){
     console.log(this.state.steps);
@@ -62,25 +60,27 @@ export default React.createClass({
     }
   },
   handleTurning(e){
-    if (Math.abs(this.state.turnDetected) > 60 && Math.abs(this.state.turnDetected) < 120) {
-      stepCluster.push("turn right");
-      this.setState({
-          currentHeading: this.state.deltaHeading,
-          rightTurn: {
-            detected: true
-          }
-      })
-      this.handleStepCluster();
+    if (typeof(stepCluster[stepCluster.length -1]) === "number") {
+      if (Math.abs(this.state.turnDetected) > 60 && Math.abs(this.state.turnDetected) < 120) {
+        stepCluster.push("turn right");
+        this.setState({
+            currentHeading: this.state.deltaHeading,
+            rightTurn: {
+              detected: true
+            }
+        })
+        this.handleStepCluster();
 
-    } else if (Math.abs(this.state.turnDetected) > 240 && Math.abs(this.state.turnDetected) < 300) {
-      stepCluster.push("turn left");
-      this.setState({
-          currentHeading: this.state.deltaHeading,
-          leftTurn: {
-            detected: true
-          }
-      })
-      this.handleStepCluster();
+      } else if (Math.abs(this.state.turnDetected) > 240 && Math.abs(this.state.turnDetected) < 300) {
+        stepCluster.push("turn left");
+        this.setState({
+            currentHeading: this.state.deltaHeading,
+            leftTurn: {
+              detected: true
+            }
+        })
+        this.handleStepCluster();
+      }
     }
   },
   handleStepCluster(e){
