@@ -19,7 +19,7 @@ export default React.createClass({
   getInitialState(){
     return{
       steps: 0,
-      deltaHeading: 25,
+      deltaHeading: 0,
       turnDetected: 0,
       currentHeading: 0,
       modal: {
