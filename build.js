@@ -1,17 +1,19 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, Route, browserHistory, IndexRoute } from 'react-router'
+import { Router, Route, hashHistory, IndexRoute } from 'react-router'
 import App from './modules/App'
 import Landing from './modules/Landing'
 import CreateRouteLabel from './modules/CreateRouteLabel'
 import CreateRoutePath from './modules/CreateRoutePath'
+import AllRoutes from './modules/AllRoutes'
 
 
 render((
-  <Router history={browserHistory}>
-    <Route path="/" component={CreateRoutePath}/>
+  <Router history={hashHistory}>
+    <Route path="/" component={CreateRouteLabel}/>
     <Route path="/landing" component={Landing}/>
-    <Route path="/createRouteLabel" component={CreateRouteLabel}/>
-    <Route path="/createRoutePath" component={CreateRoutePath}/>
+    <Route path="/createRouteLabel/:building/:floor/:room/:routeLabelForm" component={CreateRouteLabel}/>
+    <Route path="/createRoutePath/:building/:floor/:room/:routeLabelForm" component={CreateRoutePath}/>
+    <Route path="/allRoutes" component={AllRoutes}/>
   </Router>
 ), document.getElementById('app'))
