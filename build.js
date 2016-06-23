@@ -10,7 +10,7 @@ import AllRoutes from './modules/AllRoutes'
 
 render((
   <Router history={hashHistory}>
-    <Route path="/" component={CreateRouteLabel}/>
+    <Route path="/" component={CreateRoutePath}/>
     <Route path="/landing" component={Landing}/>
     <Route path="/createRouteLabel/:building/:floor/:room/:routeLabelForm" component={CreateRouteLabel}/>
     <Route path="/createRoutePath/:building/:floor/:room/:routeLabelForm" component={CreateRoutePath}/>
