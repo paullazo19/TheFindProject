@@ -36,11 +36,15 @@ export default React.createClass({
       }
     }
   },
+  componentDidMount(){
+    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
+  },
   convertStepNum(speed){
     return speed / 0.565
   },
   onWatchPosition(position){
     // convert stepNum in function
+    console.log("watched");
     this.convertStepNum();
     this.setState({
       steps: this.state.steps + this.convertStepNum(position.coords.speed),
@@ -52,10 +56,9 @@ export default React.createClass({
     }, 1000)
   },
   componentWillUpdate(){
-    var throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
     console.log(this.state.steps);
     if (this.state.startRecord.isOn == true) {
-      navigator.geolocation.watchPosition(throttleOnWatchPosition, null, {enableHighAccuracy: true});
+      navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
     }
   },
   handleTurning(e){
