@@ -38,6 +38,9 @@ export default React.createClass({
   },
   componentDidMount(){
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
+    this.setState({
+      currentHeading: this.state.deltaHeading
+    })
   },
   convertStepNum(speed){
     return speed / 0.565
