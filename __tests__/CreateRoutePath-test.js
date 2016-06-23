@@ -30,6 +30,8 @@ describe('Create Route Path component', ()=> {
     spyOn(formRendered, "handleTurning").and.callThrough();
     spyOn(formRendered, "handleStepCluster").and.callThrough();
     spyOn(formRendered, "convertStepNum").and.callThrough();
+    spyOn(formRendered, "submitRoutePath").and.callThrough();
+    spyOn(formRendered, "directToAllRoutes");
 
     stubbedData = {
       steps: 0,
@@ -86,6 +88,13 @@ describe('Create Route Path component', ()=> {
   describe('when a createRoutePath user walks', ()=> {
     it('converts stepNum to add to state.steps', ()=> {
       expect(formRendered.convertStepNum(1.13)).toEqual(2);
+    })
+  })
+
+  describe('when a createRoutePath user presses end route', ()=> {
+    it('directs the user to all routes page', ()=> {
+      formRendered.submitRoutePath(e);
+      expect(formRendered.directToAllRoutes).toBeCalled();
     })
   })
 

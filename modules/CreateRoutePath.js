@@ -82,11 +82,16 @@ export default React.createClass({
         steps: 0
       })
   },
+  directToAllRoutes(){
+    hashHistory.push("/AllRoutes")
+  },
   submitRoutePath(e){
     e.preventDefault();
+    this.directToAllRoutes();
     var serializedForm = Serialize(this.refs.routePathForm, {hash: true})
     $.post(this.props.routePathSource, serializedForm, (resp)=> {
       alert("Route successfully submitted. Thank you!")
+
     });
   },
   startRecording(e){
@@ -98,9 +103,10 @@ export default React.createClass({
         isOn: true
       }
     })
-
-    var serializedForm = Serialize(this.refs.routeLabelForm, {hash: true})
+    console.log(this.props.params.routeLabelForm);
+    var serializedForm = Serialize(this.props.params.routeLabelForm, {hash: true})
     $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
+      console.log("sent label form");
       this.getRouteLabels();
     });
   },
@@ -113,7 +119,7 @@ export default React.createClass({
     return (
       <div>
       <div className={this.state.modal.isOn? "modal--show" : "modal--hide"}>
-        <Link className="startRecord--back" to={`/createRouteLabel/${this.props.params.building}/${this.props.params.floor}/${this.props.params.room}`}>Back</Link>
+        <Link className="startRecord--back" to={`/createRouteLabel/${this.props.params.building}/${this.props.params.floor}/${this.props.params.room}/${this.refs.routeLabelForm}`}>Back</Link>
         <div className="routeInfo">Building: {`${this.props.params.building}`}<span className="routeInfo--middle">Floor: {`${this.props.params.floor}`}</span>Room: {`${this.props.params.room}`}</div>
         <p className="startRecord--warning">To ensure optimal route accuracy, please begin route inside the building at the main entrance with your back to the door. Thank you.</p>
         <a className="startRecord--button" ref="startRecord" onClick={this.startRecording}>Start Recording</a>
@@ -124,7 +130,7 @@ export default React.createClass({
 
       <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
         <input type="text" name="stepCluster" value={stepCluster} readOnly/>
-        <input type="submit" value="end route"/>
+        <input type="submit" ref="endRoute" value="end route"/>
       </form>
 
       <ul>{stepCluster}</ul>

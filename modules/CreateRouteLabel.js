@@ -63,24 +63,25 @@ export default React.createClass({
     })
     this.checkAllInputStates();
   },
-  handleCreateRouteSubmit(){
-    console.log("handleCreateRouteSubmit");
+  handleCreateRouteSubmit(e){
+    e.preventDefault();
+
     if (this.state.buildingAddress.hasError === false &&
         this.state.floorNumber.hasError === false &&
         this.state.roomDescription.hasError === false) {
       //Direct user to starting screen for route creation
       this.directUserToCreateRoutePath();
+      console.log("ran direct user");
     } else {
       this.checkAllInputStates();
     }
   },
   directUserToCreateRoutePath(){
     console.log("info pushed");
-    hashHistory.push(`/createRoutePath/${this.refs.building.value}/${this.refs.floor.value}/${this.refs.room.value}`)
+    hashHistory.push(`/createRoutePath/${this.refs.building.value}/${this.refs.floor.value}/${this.refs.room.value}/${this.refs.routeLabelForm}`)
 
   },
   render() {
-    console.log(this.props.params);
     return (
       <div>
         <form className={this.checkAllInputStates()? "form--error" : ""} method="POST" ref="routeLabelForm" action="#" onSubmit={this.handleCreateRouteSubmit}>

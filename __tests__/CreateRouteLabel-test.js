@@ -48,12 +48,12 @@ describe('Create Route Label component', ()=> {
       }
     }
     formRendered.setState(stubbedData);
-    formRendered.handleCreateRouteSubmit();
+    formRendered.handleCreateRouteSubmit(e);
     expect(formRendered.directUserToCreateRoutePath).toBeCalled();
   });
 
   it('checks all input states when an error state is true', ()=> {
-    formRendered.handleCreateRouteSubmit();
+    formRendered.handleCreateRouteSubmit(e);
     expect(formRendered.checkAllInputStates).toBeCalled();
   });
 
