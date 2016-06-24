@@ -6,7 +6,7 @@ import Serialize from 'form-serialize'
 import _ from 'underscore'
 
 
-var stepCluster = [5];
+var stepCluster = [];
 var stepNum;
 
 export default React.createClass({
@@ -38,9 +38,29 @@ export default React.createClass({
   },
   componentDidMount(){
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
-    this.setState({
-      currentHeading: this.state.deltaHeading
-    })
+
+    // this.setCurrentHeading();
+    setInterval(this.setCurrentHeading, 250)
+  },
+  setCurrentHeading(){
+    if (this.state.startRecord.isOn == true) {
+      this.setState({
+          currentHeading: this.state.deltaHeading
+      })
+    }
+
+    // if (this.state.startRecord.isOn == true) {
+    //   var start = Date.now();
+    //   var end = start + 5000;
+    //   console.log("timeout");
+    //   if (start > end) {
+    //     clearInterval(timer);
+    //   }
+    //   var timer = setInterval(this.setCurrentHeading, 1000);
+    // }
+    //
+    //   this.setState({currentHeading:this.state.deltaHeading});
+    // }
   },
   convertStepNum(speed){
     return speed / 0.565
@@ -57,7 +77,9 @@ export default React.createClass({
     this.handleTurning();
   },
   componentWillUpdate(){
-    console.log(this.state.steps);
+    if (this.state.currentHeading != 0) {
+      clearInterval(this.setCurrentHeading)
+    }
     if (this.state.startRecord.isOn == true) {
       navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
     }
