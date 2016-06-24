@@ -5,8 +5,6 @@ import $ from 'jquery'
 import Serialize from 'form-serialize'
 import _ from 'underscore'
 
-
-var stepCluster = [];
 var stepNum;
 
 export default React.createClass({
@@ -33,21 +31,22 @@ export default React.createClass({
       },
       rightTurn: {
         detected: false
-      }
+      },
+      stepCluster: []
     }
   },
   componentDidMount(){
-    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
+    navigator.geolocation.getCurrentPosition((position)=> {
+      this.setState({
+        currentHeading: position.coords.heading
+      })
+    }, null)
 
-    // this.setCurrentHeading();
-    setInterval(this.setCurrentHeading, 250)
   },
   setCurrentHeading(){
-    if (this.state.startRecord.isOn == true) {
       this.setState({
           currentHeading: this.state.deltaHeading
       })
-    }
 
     // if (this.state.startRecord.isOn == true) {
     //   var start = Date.now();
@@ -66,53 +65,62 @@ export default React.createClass({
     return speed / 0.565
   },
   onWatchPosition(position){
-    // convert stepNum in function
-    console.log("watched");
-    this.convertStepNum();
-    this.setState({
-      steps: this.state.steps + this.convertStepNum(position.coords.speed),
-      deltaHeading: position.coords.heading,
-      turnDetected: this.state.currentHeading - this.state.deltaHeading
-    })
-    this.handleTurning();
-  },
-  componentWillUpdate(){
-    if (this.state.currentHeading != 0) {
-      clearInterval(this.setCurrentHeading)
-    }
-    if (this.state.startRecord.isOn == true) {
-      navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
-    }
-  },
-  handleTurning(e){
-    if (typeof(stepCluster[stepCluster.length -1]) === "number") {
-      if (Math.abs(this.state.turnDetected) > 60 && Math.abs(this.state.turnDetected) < 120) {
-        stepCluster.push("turn right");
-        this.setState({
-            currentHeading: this.state.deltaHeading,
-            rightTurn: {
-              detected: true
-            }
-        })
-        this.handleStepCluster();
-
-      } else if (Math.abs(this.state.turnDetected) > 240 && Math.abs(this.state.turnDetected) < 300) {
-        stepCluster.push("turn left");
-        this.setState({
-            currentHeading: this.state.deltaHeading,
-            leftTurn: {
-              detected: true
-            }
-        })
-        this.handleStepCluster();
+      // convert stepNum in function
+      this.setState({
+        steps: this.state.steps + this.convertStepNum(position.coords.speed),
+        deltaHeading: position.coords.heading
+      })
+      if (this.state.steps > 0) {
+        this.calcDifference(this.state.currentHeading, this.state.deltaHeading);
       }
+  },
+  calcDifference(currentHeading, deltaHeading){
+    //calculate absolute of currentHeading - deltaHeading
+    var difference = currentHeading - deltaHeading;
+    if (difference > 180) {
+      difference = difference - 365;
     }
+    difference = Math.abs(difference);
+
+    this.handleTurning(difference);
+  },
+  handleTurning(difference){
+    // if (this.state.stepCluster.length === 0) {
+    //     this.handleStepCluster()
+    // }
+    var lastCluster = typeof(this.state.stepCluster[this.state.stepCluster.length -1]);
+    // if (lastCluster === "number") {
+    console.log(difference);
+      if (difference <= 120 && difference >= 60) {
+        this.handleStepCluster();
+        this.setState({
+          stepCluster: this.state.stepCluster.push("turn right"),
+          currentHeading: this.state.deltaHeading,
+          rightTurn: {
+            detected: true
+          }
+        })
+      } else if (difference <= 300 && difference >= 240) {
+        this.handleStepCluster();
+        this.setState({
+          stepCluster: this.state.stepCluster.push("turn left"),
+          currentHeading: this.state.deltaHeading,
+          rightTurn: {
+            detected: true
+          }
+        });
+      }
+    // }
   },
   handleStepCluster(e){
-      stepCluster.push(Math.ceil(this.state.steps));
+    // prevent 0 from pushing to cluster
+    if (this.state.steps != 0 ) {
       this.setState({
-        steps: 0
+        steps: 0,
+        stepCluster: [Math.ceil(this.state.steps)]
       })
+    }
+    console.log(this.state.stepCluster);
   },
   directToAllRoutes(){
     hashHistory.push("/AllRoutes")
@@ -127,6 +135,11 @@ export default React.createClass({
     });
   },
   startRecording(e){
+    _.delay(this.setCurrentHeading, 1000);
+
+    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
+    navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
+
     this.setState({
       modal: {
         isOn: false
@@ -148,6 +161,7 @@ export default React.createClass({
     })
   },
   render() {
+    console.log(this.state.stepCluster);
     return (
       <div>
       <div className={this.state.modal.isOn? "modal--show" : "modal--hide"}>
@@ -161,11 +175,11 @@ export default React.createClass({
       <h2>delta heading: {this.state.deltaHeading}</h2>
 
       <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
-        <input type="text" name="stepCluster" value={stepCluster} readOnly/>
+        <input type="text" name="stepCluster" value={this.state.stepCluster} readOnly/>
         <input type="submit" ref="endRoute" value="end route"/>
       </form>
 
-      <ul>{stepCluster}</ul>
+      <ul></ul>
       </div>
     )
   }
