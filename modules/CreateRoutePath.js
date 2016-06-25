@@ -5,8 +5,6 @@ import $ from 'jquery'
 import Serialize from 'form-serialize'
 import _ from 'underscore'
 
-var stepNum;
-
 export default React.createClass({
   getDefaultProps(){
     return {
@@ -36,6 +34,8 @@ export default React.createClass({
     }
   },
   componentDidMount(){
+    this.currentSteps = 0;
+    this.stepCluster = [];
     navigator.geolocation.getCurrentPosition((position)=> {
       this.setState({
         currentHeading: position.coords.heading
@@ -65,14 +65,21 @@ export default React.createClass({
     return speed / 0.565
   },
   onWatchPosition(position){
+    console.log(this.stepCluster);
+    if (this.currentSteps >= 1) {
+      this.stepCluster.push({value: 1, heading: position.coords.heading})
+      var remainder = this.currentSteps > 1? this.currentSteps-1 : 0;
+      this.currentSteps = remainder;
+    }
+    this.currentSteps += this.convertStepNum(position.coords.speed);
       // convert stepNum in function
-      this.setState({
-        steps: this.state.steps + this.convertStepNum(position.coords.speed),
-        deltaHeading: position.coords.heading
-      })
-      if (this.state.steps > 0) {
-        this.calcDifference(this.state.currentHeading, this.state.deltaHeading);
-      }
+      // this.setState({
+      //   steps: this.state.steps + this.convertStepNum(position.coords.speed),
+      //   deltaHeading: position.coords.heading
+      // })
+      // if (this.state.steps > 0) {
+      //   this.calcDifference(this.state.currentHeading, this.state.deltaHeading);
+      // }
   },
   calcDifference(currentHeading, deltaHeading){
     //calculate absolute of currentHeading - deltaHeading
@@ -137,7 +144,7 @@ export default React.createClass({
   startRecording(e){
     _.delay(this.setCurrentHeading, 1000);
 
-    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
+    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
     navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
 
     this.setState({
