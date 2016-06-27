@@ -85,7 +85,7 @@ export default React.createClass({
     //calculate absolute of currentHeading - deltaHeading
     var difference = currentHeading - deltaHeading;
     if (difference > 180) {
-      difference = difference - 365;
+      difference = difference - 360;
     }
     difference = Math.abs(difference);
 
