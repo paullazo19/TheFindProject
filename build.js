@@ -6,7 +6,7 @@ import Landing from './modules/Landing'
 import CreateRouteLabel from './modules/CreateRouteLabel'
 import CreateRoutePath from './modules/CreateRoutePath'
 import AllRoutes from './modules/AllRoutes'
-import StartNav from './modules/StartNav'
+import NavRoutePath from './modules/NavRoutePath'
 
 
 render((
@@ -16,6 +16,6 @@ render((
     <Route path="/createRouteLabel/:building/:floor/:room/:routeLabelForm" component={CreateRouteLabel}/>
     <Route path="/createRoutePath/:building/:floor/:room/:routeLabelForm" component={CreateRoutePath}/>
     <Route path="/allRoutes" component={AllRoutes}/>
-    <Route path="/startNav/:uuid" component={StartNav}/>
+    <Route path="/navRoutePath/:uuid" component={NavRoutePath}/>
   </Router>
 ), document.getElementById('app'))

@@ -72,7 +72,7 @@ export default React.createClass({
       this.currentSteps = remainder;
     }
     this.currentSteps += this.convertStepNum(position.coords.speed);
-      // convert stepNum in function
+      // // convert stepNum in function
       // this.setState({
       //   steps: this.state.steps + this.convertStepNum(position.coords.speed),
       //   deltaHeading: position.coords.heading
@@ -81,44 +81,44 @@ export default React.createClass({
       //   this.calcDifference(this.state.currentHeading, this.state.deltaHeading);
       // }
   },
-  calcDifference(currentHeading, deltaHeading){
-    //calculate absolute of currentHeading - deltaHeading
-    var difference = currentHeading - deltaHeading;
-    if (difference > 180) {
-      difference = difference - 360;
-    }
-    difference = Math.abs(difference);
-
-    this.handleTurning(difference);
-  },
-  handleTurning(difference){
-    // if (this.state.stepCluster.length === 0) {
-    //     this.handleStepCluster()
-    // }
-    var lastCluster = typeof(this.state.stepCluster[this.state.stepCluster.length -1]);
-    // if (lastCluster === "number") {
-    console.log(difference);
-      if (difference <= 120 && difference >= 60) {
-        this.handleStepCluster();
-        this.setState({
-          stepCluster: this.state.stepCluster.push("turn right"),
-          currentHeading: this.state.deltaHeading,
-          rightTurn: {
-            detected: true
-          }
-        })
-      } else if (difference <= 300 && difference >= 240) {
-        this.handleStepCluster();
-        this.setState({
-          stepCluster: this.state.stepCluster.push("turn left"),
-          currentHeading: this.state.deltaHeading,
-          rightTurn: {
-            detected: true
-          }
-        });
-      }
-    // }
-  },
+  // calcDifference(currentHeading, deltaHeading){
+  //   //calculate absolute of currentHeading - deltaHeading
+  //   var difference = currentHeading - deltaHeading;
+  //   if (difference > 180) {
+  //     difference = difference - 360;
+  //   }
+  //   difference = Math.abs(difference);
+  //
+  //   this.handleTurning(difference);
+  // },
+  // handleTurning(difference){
+  //   // if (this.state.stepCluster.length === 0) {
+  //   //     this.handleStepCluster()
+  //   // }
+  //   var lastCluster = typeof(this.state.stepCluster[this.state.stepCluster.length -1]);
+  //   // if (lastCluster === "number") {
+  //   console.log(difference);
+  //     if (difference <= 120 && difference >= 60) {
+  //       this.handleStepCluster();
+  //       this.setState({
+  //         stepCluster: this.state.stepCluster.push("turn right"),
+  //         currentHeading: this.state.deltaHeading,
+  //         rightTurn: {
+  //           detected: true
+  //         }
+  //       })
+  //     } else if (difference <= 300 && difference >= 240) {
+  //       this.handleStepCluster();
+  //       this.setState({
+  //         stepCluster: this.state.stepCluster.push("turn left"),
+  //         currentHeading: this.state.deltaHeading,
+  //         rightTurn: {
+  //           detected: true
+  //         }
+  //       });
+  //     }
+  //   // }
+  // },
   handleStepCluster(e){
     // prevent 0 from pushing to cluster
     if (this.state.steps != 0 ) {
@@ -142,7 +142,7 @@ export default React.createClass({
     });
   },
   startRecording(e){
-    _.delay(this.setCurrentHeading, 1000);
+    // _.delay(this.setCurrentHeading, 1000);
 
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
     navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
