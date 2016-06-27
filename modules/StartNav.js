@@ -77,7 +77,7 @@ export default React.createClass({
     })
   },
   segmentRoute(){
-    this.props.RoutesData[0].route.map((step, i)=>{
+    this.props.RoutesData[0].route.map((step, i)=> {
       if (i != 0) {
           var difference = this.props.RoutesData[0].route[i-1].heading - step.heading;
       }
@@ -103,47 +103,42 @@ export default React.createClass({
         route.push("turn right");
 
         // console.log("previous", previousStepCluster, "current", currentStepCluster, "adjusted", adjustedStepCluster);
-      }
-    })
+      } else if (difference >= 240 && difference <= 300) {
 
-    // <ul>
-    //   {this.props.RoutesData[0].route.map((step, i)=>{
-    //     if (i != 0) {
-    //         var difference = this.props.RoutesData[0].route[i-1].heading - step.heading;
-    //     }
-    //     if (difference > 180) {
-    //       difference = difference - 360;
-    //     }
-    //     difference = Math.abs(difference);
-    //     if (difference >= 60 && difference <= 120) {
-    //
-    //       var previousStepCluster = 0;
-    //       var currentStepCluster = i+1;
-    //       var adjustedStepCluster = currentStepCluster - previousStepCluster;
-    //
-    //       console.log("previous", previousStepCluster, "current", currentStepCluster, "adjusted", adjustedStepCluster, "turn right");
-    //     }
-    //     return <li ref="routeSegment" key={i}>{step.heading}</li>
-    //   })}
-    // </ul>
+          if (isNaN(adjustedStepCluster) === true) {
+            previousStepCluster = 0;
+            adjustedStepCluster = 0;
+          } else {
+            previousStepCluster = adjustedStepCluster;
+          }
 
+          currentStepCluster = i+1;
+          adjustedStepCluster = currentStepCluster - previousStepCluster;
+
+          // this.state.route.push(adjustedStepCluster);
+          // this.state.route.push("turn right");
+          route.push(adjustedStepCluster);
+          route.push("turn left");
+        }
+
+      })
+    }
   },
   navigateRoute(){
     route.map((routeSegment, i)=> {
       this.stepCluster.length = 5;
-      currentSegment = route[i];
+      // currentSegment = route[i-1];
       // return console.log(routeSegment, route[0]);
-      if (this.stepCluster.length === currentSegment ) {
+      if (this.stepCluster.length === route[i] ) {
         // var remainder = this.currentSteps > 1? this.currentSteps-1 : 0;
         // currentSegment = this.stepCluster.length === 0 ? route[0] : route[1];
         console.log("equal");
         currentSegment = route[i+1];
       }
     })
-
   },
   render() {
-    console.log("hello", currentSegment, route);
+    // console.log("hello", currentSegment, route);
     return(
       <div>
         <h3>This is the individual route page.</h3>

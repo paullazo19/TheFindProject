@@ -7,7 +7,7 @@ export default [
       room: "testRoom1"
     },
     route: [
-      //this route should contain 5 steps, right turn, 3 steps, and a right turn
+      //this route should contain 5 steps, right turn, 3 steps, and a left turn
       {
         value: 1,
         heading: 225
@@ -38,7 +38,7 @@ export default [
       },
       {
         value: 1,
-        heading: 15
+        heading: 225
       }
     ]
   },
