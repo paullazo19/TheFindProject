@@ -7,17 +7,19 @@ import CreateRouteLabel from './modules/CreateRouteLabel'
 import StartCreate from './modules/StartCreate'
 import CreateRoutePath from './modules/CreateRoutePath'
 import AllRoutes from './modules/AllRoutes'
+import StartNav from './modules/StartNav'
 import NavRoutePath from './modules/NavRoutePath'
 
 
 render((
   <Router history={hashHistory}>
-    <Route path="/" component={App}/>
+    <Route path="/" component={CreateRoutePath}/>
     <Route path="/landing/:ft/:in" component={Landing}/>
     <Route path="/createRouteLabel/:ft/:in" component={CreateRouteLabel}/>
     <Route path="/startCreate/:building/:floor/:room/:ft/:in" component={StartCreate}/>
     <Route path="/createRoutePath/:building/:floor/:room/:ft/:in" component={CreateRoutePath}/>
-    <Route path="/allRoutes/:ft/:in" component={AllRoutes}/>
+    <Route path="/allRoutes/:uuid/:ft/:in" component={AllRoutes}/>
+    <Route path="/startNav/:uuid/:ft/:in" component={StartNav}/>
     <Route path="/navRoutePath/:uuid/:ft/:in" component={NavRoutePath}/>
   </Router>
 ), document.getElementById('app'))

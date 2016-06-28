@@ -32,13 +32,7 @@ export default React.createClass({
       current: 0,
       segment: 0,
       stepHeading: 0,
-      route: [],
-      modal: {
-        isOn: true
-      },
-      startNav: {
-        isOn: false
-      }
+      route: []
     }
   },
   componentDidMount(){
@@ -51,14 +45,11 @@ export default React.createClass({
       })
     }, null)
     this.segmentRoute();
-    // setInterval(()=>{
-    //   this.navigateRoute();
-    //   this.currentSteps++
-    //   this.turnDetected = "turn right";
-    //   // this.turnDetected = "turn left";
-    //   console.log("current steps", this.currentSteps, "turn detected", this.turnDetected);
-    // }, 2000);
 
+    _.delay(this.setCurrentHeading, 1000);
+
+    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
+    navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
   },
   convertToStrideMeters(feet, inches){
     heightInches = Number(feet*12) + Number(inches)
@@ -110,18 +101,7 @@ export default React.createClass({
     // this.turnDetected = "";
   },
   startNav(e){
-    _.delay(this.setCurrentHeading, 1000);
 
-    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
-    navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
-    this.setState({
-      modal: {
-        isOn: false
-      },
-      startNav: {
-        isOn: true
-      }
-    })
   },
   segmentRoute(){
     this.props.RoutesData[0].route.map((step, i)=> {
@@ -215,11 +195,6 @@ export default React.createClass({
         <p>{route[this.state.segment]}</p>
         <p>steps: {this.currentSteps}</p>
         <p>turn detected: {this.turnDetected}</p>
-
-        <div className={this.state.modal.isOn? "modal--show" : "modal--hide"}>
-          <p className="startRecord--warning">To ensure the best navigation experience, please begin navigation inside the building at the main entrance with your back to the door. Thank you.</p>
-          <a className="startRecord--button" ref="startNav" onClick={this.startNav}>Start Recording</a>
-        </div>
       </div>
     )
   }

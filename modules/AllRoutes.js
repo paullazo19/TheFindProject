@@ -18,7 +18,7 @@ export default React.createClass({
         <h2 className="routes--heading">All Routes</h2>
         <ul className="routesList">
           { this.props.RoutesData.map((route, i)=> {
-            return  <Link to={`/NavRoutePath/${route.uuid}/${this.props.params.ft}/${this.props.params.in}`} className="route--link" key={i}>{`Building: ${route.label.building}, Floor: ${route.label.floor}, Room: ${route.label.room}`}</Link>
+            return  <Link to={`/StartNav/${route.uuid}/${this.props.params.ft}/${this.props.params.in}`} className="route--link" key={i}>{`Building: ${route.label.building}, Floor: ${route.label.floor}, Room: ${route.label.room}`}</Link>
           }) }
         </ul>
       </div>

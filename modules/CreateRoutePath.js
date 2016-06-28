@@ -8,11 +8,13 @@ import _ from 'underscore'
 var heightInches;
 var strideInches;
 var strideMeters;
+// var latestLabel;
 
 export default React.createClass({
   getDefaultProps(){
     return {
-      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path"
+      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path",
+      routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label"
     }
   },
   getInitialState(){
@@ -31,6 +33,7 @@ export default React.createClass({
     }
   },
   componentDidMount(){
+    this.getRouteLabels();
     this.convertToStrideMeters(this.props.params.ft, this.props.params.in)
     this.currentSteps = 0;
     this.stepCluster = [];
@@ -86,7 +89,7 @@ export default React.createClass({
     console.log(this.state.stepCluster);
   },
   directToAllRoutes(){
-    hashHistory.push("/AllRoutes/:ft/:in")
+    hashHistory.push("/AllRoutes/:uuid/:ft/:in")
   },
   submitRoutePath(e){
     e.preventDefault();
@@ -97,6 +100,12 @@ export default React.createClass({
 
     });
   },
+  getRouteLabels(){
+    $.get(this.props.routeLabelSource, (resp)=> {
+      this.latestLabel = resp[0]._id;
+      console.log(this.latestLabel);
+    })
+  },
   render() {
     console.log(this.state.stepCluster);
     return (
@@ -105,7 +114,8 @@ export default React.createClass({
         <h2>current heading: {this.state.currentHeading}</h2>
         <h2>delta heading: {this.state.deltaHeading}</h2>
         <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
-          <input type="text" name="stepCluster" value={this.state.stepCluster} readOnly/>
+        <input className="input--hidden" type="text" name="label" value={this.latestLabel} readOnly/>
+          <input className="input--hidden" type="text" name="stepCluster" value={this.stepCluster} readOnly/>
           <input type="submit" ref="endRoute" value="end route"/>
         </form>
       </div>

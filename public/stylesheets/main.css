@@ -90,6 +90,9 @@ body {
   text-decoration: none;
   width: 75%; }
 
+.input--hidden {
+  display: none; }
+
 .createRouteLabel__input {
   display: block;
   width: 100%; }
