@@ -78,7 +78,7 @@ export default React.createClass({
   },
   directUserToCreateRoutePath(){
     console.log("info pushed");
-    hashHistory.push(`/createRoutePath/${this.refs.building.value}/${this.refs.floor.value}/${this.refs.room.value}/${this.refs.routeLabelForm}`)
+    hashHistory.push(`/createRoutePath/${this.refs.building.value}/${this.refs.floor.value}/${this.refs.room.value}/${this.refs.ft.value}/${this.refs.in.value}`)
 
   },
   render() {

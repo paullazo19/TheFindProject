@@ -53,7 +53,7 @@ export default React.createClass({
     }
   },
   directUserToLanding(){
-    hashHistory.push('/landing')
+    hashHistory.push(`/landing/${this.refs.ft.value}/${this.refs.in.value}`)
   },
   convertToStrideMeters(feet, inches){
     var heightInches = Number(feet*12) + Number(inches)

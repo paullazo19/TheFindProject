@@ -172,7 +172,7 @@ export default React.createClass({
     return (
       <div>
       <div className={this.state.modal.isOn? "modal--show" : "modal--hide"}>
-        <Link className="startRecord--back" to={`/createRouteLabel/${this.props.params.building}/${this.props.params.floor}/${this.props.params.room}/${this.refs.routeLabelForm}`}>Back</Link>
+        <Link className="startRecord--back" to={`/createRouteLabel/${this.props.params.building}/${this.props.params.floor}/${this.props.params.room}/${this.refs.ft.value}/${this.refs.in.value}`}>Back</Link>
         <div className="routeInfo">Building: {`${this.props.params.building}`}<span className="routeInfo--middle">Floor: {`${this.props.params.floor}`}</span>Room: {`${this.props.params.room}`}</div>
         <p className="startRecord--warning">To ensure optimal route accuracy, please begin route inside the building at the main entrance with your back to the door. Thank you.</p>
         <a className="startRecord--button" ref="startRecord" onClick={this.startRecording}>Start Recording</a>

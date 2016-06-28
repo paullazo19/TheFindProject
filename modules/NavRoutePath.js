@@ -189,7 +189,7 @@ export default React.createClass({
       // currentSegment = this.state.segment;
       // console.log("currentSegment", currentSegment);
     } else if (this.state.segment === route.length) {
-      console.log("You've completed the route!");
+      alert("You've completed the route!");
     }
   },
   render() {

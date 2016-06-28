@@ -11,11 +11,11 @@ import NavRoutePath from './modules/NavRoutePath'
 
 render((
   <Router history={hashHistory}>
-    <Route path="/" component={AllRoutes}/>
-    <Route path="/landing" component={Landing}/>
-    <Route path="/createRouteLabel/:building/:floor/:room/:routeLabelForm" component={CreateRouteLabel}/>
-    <Route path="/createRoutePath/:building/:floor/:room/:routeLabelForm" component={CreateRoutePath}/>
-    <Route path="/allRoutes" component={AllRoutes}/>
+    <Route path="/" component={App}/>
+    <Route path="/landing/:ft/:in" component={Landing}/>
+    <Route path="/createRouteLabel/:ft/:in" component={CreateRouteLabel}/>
+    <Route path="/createRoutePath/:building/:floor/:room/:ft/:in" component={CreateRoutePath}/>
+    <Route path="/allRoutes/:ft/:in" component={AllRoutes}/>
     <Route path="/navRoutePath/:uuid" component={NavRoutePath}/>
   </Router>
 ), document.getElementById('app'))

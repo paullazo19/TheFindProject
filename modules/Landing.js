@@ -1,14 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, hashHistory, IndexRoute } from 'react-router'
-import { Link } from 'react-router'
+import { Router, Route, hashHistory, IndexRoute, Link } from 'react-router'
 
 export default React.createClass({
   render() {
     return (
       <div>
-        <button></button>
-        <button>Navigate existing route</button>
+        <nav className="landing--nav">
+          <Link className="landing--link" to={`/CreateRouteLabel/${this.props.params.ft}/${this.props.params.in}`}>Create new route</Link>
+          <Link className="landing--link" to={`/AllRoutes/${this.props.params.ft}/${this.props.params.in}`}>Navigate existing route</Link>
+        </nav>
       </div>
     )
   }
