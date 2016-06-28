@@ -13,12 +13,12 @@ import NavRoutePath from './modules/NavRoutePath'
 
 render((
   <Router history={hashHistory}>
-    <Route path="/" component={CreateRoutePath}/>
+    <Route path="/" component={App}/>
     <Route path="/landing/:ft/:in" component={Landing}/>
     <Route path="/createRouteLabel/:ft/:in" component={CreateRouteLabel}/>
     <Route path="/startCreate/:building/:floor/:room/:ft/:in" component={StartCreate}/>
     <Route path="/createRoutePath/:building/:floor/:room/:ft/:in" component={CreateRoutePath}/>
-    <Route path="/allRoutes/:uuid/:ft/:in" component={AllRoutes}/>
+    <Route path="/allRoutes" component={AllRoutes}/>
     <Route path="/startNav/:uuid/:ft/:in" component={StartNav}/>
     <Route path="/navRoutePath/:uuid/:ft/:in" component={NavRoutePath}/>
   </Router>

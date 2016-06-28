@@ -8,7 +8,8 @@ import _ from 'underscore'
 var heightInches;
 var strideInches;
 var strideMeters;
-// var latestLabel;
+
+var stepCluster = [];
 
 export default React.createClass({
   getDefaultProps(){
@@ -17,33 +18,23 @@ export default React.createClass({
       routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label"
     }
   },
-  getInitialState(){
-    return{
-      steps: 0,
-      deltaHeading: 0,
-      turnDetected: 0,
-      currentHeading: 0,
-      leftTurn: {
-        detected: false
-      },
-      rightTurn: {
-        detected: false
-      },
-      stepCluster: []
-    }
-  },
   componentDidMount(){
-    this.getRouteLabels();
+    // this.getRouteLabels();
     this.convertToStrideMeters(this.props.params.ft, this.props.params.in)
     this.currentSteps = 0;
-    this.stepCluster = [];
+    // stepCluster = [];
+    console.log("cluster", stepCluster);
     navigator.geolocation.getCurrentPosition((position)=> {
-      this.setState({
-        currentHeading: position.coords.heading
-      })
+      console.log("got current position");
     }, null)
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
     navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
+
+    setInterval(()=>{
+      stepCluster.push({value: 1, heading: 225});
+      // value="[{value:1, heading: 225}]"
+      console.log("step", stepCluster);
+    }, 2000);
   },
   convertToStrideMeters(feet, inches){
     heightInches = Number(feet*12) + Number(inches)
@@ -52,19 +43,14 @@ export default React.createClass({
     console.log("hss", heightInches, strideInches, strideMeters);
     // return strideMeters
   },
-  setCurrentHeading(){
-      this.setState({
-          currentHeading: this.state.deltaHeading
-      })
-  },
   convertStepNum(speed){
     console.log("stride meters", strideMeters);
     return speed / strideMeters
   },
   onWatchPosition(position){
-    console.log(this.stepCluster);
+    console.log(stepCluster);
     if (this.currentSteps >= 1) {
-      this.stepCluster.push({value: 1, heading: position.coords.heading})
+      stepCluster.push({value: 1, heading: position.coords.heading})
       var remainder = this.currentSteps > 1? this.currentSteps-1 : 0;
       this.currentSteps = remainder;
     }
@@ -78,45 +64,71 @@ export default React.createClass({
       //   this.calcDifference(this.state.currentHeading, this.state.deltaHeading);
       // }
   },
-  handleStepCluster(e){
-    // prevent 0 from pushing to cluster
-    if (this.state.steps != 0 ) {
-      this.setState({
-        steps: 0,
-        stepCluster: [Math.ceil(this.state.steps)]
-      })
-    }
-    console.log(this.state.stepCluster);
-  },
   directToAllRoutes(){
-    hashHistory.push("/AllRoutes/:uuid/:ft/:in")
+    hashHistory.push("/allRoutes")
   },
   submitRoutePath(e){
+    console.log("route submitted");
     e.preventDefault();
-    this.directToAllRoutes();
     var serializedForm = Serialize(this.refs.routePathForm, {hash: true})
     $.post(this.props.routePathSource, serializedForm, (resp)=> {
-      alert("Route successfully submitted. Thank you!")
+
+      $.get(this.props.routePathSource, (resp)=> {
+        this.latestPath = resp[0]._id;
+        console.log("latest", this.latestPath);
+        if (this.latestPath != null) {
+          this.submitRouteLabel();
+        }
+      })
 
     });
   },
-  getRouteLabels(){
-    $.get(this.props.routeLabelSource, (resp)=> {
-      this.latestLabel = resp[0]._id;
-      console.log(this.latestLabel);
+  // getRouteLabels(){
+  //   $.get(this.props.routeLabelSource, (resp)=> {
+  //     this.latestLabel = resp[0]._id;
+  //     console.log(this.latestLabel);
+  //   })
+  // },
+  submitRouteLabel(){
+    var serializedForm = Serialize(this.refs.routeLabelForm, {hash: true})
+    // $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
+    //   alert("Route successfully submitted. Thank you!");
+    //   this.directToAllRoutes();
+    //   console.log("sent label form");
+    // });
+
+    $.ajax({
+      url: this.props.routeLabelSource,
+      method: "POST",
+      dataType: "JSON",
+      data: {
+        building: this.props.params.building,
+        floor: this.props.params.floor,
+        room: this.props.params.room,
+        path_id: this.latestLabel
+      },
+      success: (resp)=> {
+        alert("Route successfully submitted. Thank you!");
+        this.directToAllRoutes();
+      }
     })
   },
   render() {
-    console.log(this.state.stepCluster);
+    console.log("stepCluster", stepCluster);
     return (
       <div>
-        <h2>steps: {this.state.steps}</h2>
-        <h2>current heading: {this.state.currentHeading}</h2>
-        <h2>delta heading: {this.state.deltaHeading}</h2>
+        <h2>steps: {this.currentSteps}</h2>
+        <h2>cluster: {stepCluster}</h2>
         <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
-        <input className="input--hidden" type="text" name="label" value={this.latestLabel} readOnly/>
-          <input className="input--hidden" type="text" name="stepCluster" value={this.stepCluster} readOnly/>
-          <input type="submit" ref="endRoute" value="end route"/>
+          <input className="input--hidden" type="text" name="route" value={stepCluster} readOnly/>
+          <input type="submit" ref="endRoute" value="end route" />
+        </form>
+
+        <form className="label__form--hidden" method="POST" action="#" ref="routeLabelForm">
+          <input type="text" name="building" value={this.props.params.building} readOnly/>
+          <input type="text" name="floor" value={this.props.params.floor} readOnly/>
+          <input type="text" name="room" value={this.props.params.room} readOnly/>
+
         </form>
       </div>
     )
