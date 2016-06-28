@@ -16,6 +16,6 @@ render((
     <Route path="/createRouteLabel/:ft/:in" component={CreateRouteLabel}/>
     <Route path="/createRoutePath/:building/:floor/:room/:ft/:in" component={CreateRoutePath}/>
     <Route path="/allRoutes/:ft/:in" component={AllRoutes}/>
-    <Route path="/navRoutePath/:uuid" component={NavRoutePath}/>
+    <Route path="/navRoutePath/:uuid/:ft/:in" component={NavRoutePath}/>
   </Router>
 ), document.getElementById('app'))

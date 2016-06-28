@@ -13,6 +13,10 @@ var adjustedStepCluster;
 var currentSegment;
 var turnDetected;
 
+var heightInches;
+var strideInches;
+var strideMeters;
+
 export default React.createClass({
   getDefaultProps(){
     return {
@@ -38,6 +42,7 @@ export default React.createClass({
     }
   },
   componentDidMount(){
+    this.convertToStrideMeters(this.props.params.ft, this.props.params.in)
     this.currentSteps = 0;
     this.stepCluster = [];
     navigator.geolocation.getCurrentPosition((position)=> {
@@ -55,13 +60,21 @@ export default React.createClass({
     // }, 2000);
 
   },
+  convertToStrideMeters(feet, inches){
+    heightInches = Number(feet*12) + Number(inches)
+    strideInches = heightInches/2.3;
+    strideMeters = strideInches*0.0254;
+    console.log("hss", heightInches, strideInches, strideMeters);
+    // return strideMeters
+  },
   setCurrentHeading(){
       this.setState({
           currentHeading: this.state.deltaHeading
       })
   },
   convertStepNum(speed){
-    return speed / 0.565
+    console.log("stride meters", strideMeters);
+    return speed / strideMeters
   },
   onWatchPosition(position){
     // if (this.currentSteps >= 1) {

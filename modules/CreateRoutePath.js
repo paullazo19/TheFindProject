@@ -5,6 +5,10 @@ import $ from 'jquery'
 import Serialize from 'form-serialize'
 import _ from 'underscore'
 
+var heightInches;
+var strideInches;
+var strideMeters;
+
 export default React.createClass({
   getDefaultProps(){
     return {
@@ -34,6 +38,7 @@ export default React.createClass({
     }
   },
   componentDidMount(){
+    this.convertToStrideMeters(this.props.params.ft, this.props.params.in)
     this.currentSteps = 0;
     this.stepCluster = [];
     navigator.geolocation.getCurrentPosition((position)=> {
@@ -42,6 +47,13 @@ export default React.createClass({
       })
     }, null)
 
+  },
+  convertToStrideMeters(feet, inches){
+    heightInches = Number(feet*12) + Number(inches)
+    strideInches = heightInches/2.3;
+    strideMeters = strideInches*0.0254;
+    console.log("hss", heightInches, strideInches, strideMeters);
+    // return strideMeters
   },
   setCurrentHeading(){
       this.setState({
@@ -62,7 +74,8 @@ export default React.createClass({
     // }
   },
   convertStepNum(speed){
-    return speed / 0.565
+    console.log("stride meters", strideMeters);
+    return speed / strideMeters
   },
   onWatchPosition(position){
     console.log(this.stepCluster);
@@ -172,7 +185,7 @@ export default React.createClass({
     return (
       <div>
       <div className={this.state.modal.isOn? "modal--show" : "modal--hide"}>
-        <Link className="startRecord--back" to={`/createRouteLabel/${this.props.params.building}/${this.props.params.floor}/${this.props.params.room}/${this.refs.ft.value}/${this.refs.in.value}`}>Back</Link>
+        <Link className="startRecord--back" to={`/createRouteLabel/${this.props.params.building}/${this.props.params.floor}/${this.props.params.room}/${this.props.params.ft}/${this.props.params.in}`}>Back</Link>
         <div className="routeInfo">Building: {`${this.props.params.building}`}<span className="routeInfo--middle">Floor: {`${this.props.params.floor}`}</span>Room: {`${this.props.params.room}`}</div>
         <p className="startRecord--warning">To ensure optimal route accuracy, please begin route inside the building at the main entrance with your back to the door. Thank you.</p>
         <a className="startRecord--button" ref="startRecord" onClick={this.startRecording}>Start Recording</a>
