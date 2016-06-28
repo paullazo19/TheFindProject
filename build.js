@@ -4,6 +4,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router'
 import App from './modules/App'
 import Landing from './modules/Landing'
 import CreateRouteLabel from './modules/CreateRouteLabel'
+import StartCreate from './modules/StartCreate'
 import CreateRoutePath from './modules/CreateRoutePath'
 import AllRoutes from './modules/AllRoutes'
 import NavRoutePath from './modules/NavRoutePath'
@@ -14,6 +15,7 @@ render((
     <Route path="/" component={App}/>
     <Route path="/landing/:ft/:in" component={Landing}/>
     <Route path="/createRouteLabel/:ft/:in" component={CreateRouteLabel}/>
+    <Route path="/startCreate/:building/:floor/:room/:ft/:in" component={StartCreate}/>
     <Route path="/createRoutePath/:building/:floor/:room/:ft/:in" component={CreateRoutePath}/>
     <Route path="/allRoutes/:ft/:in" component={AllRoutes}/>
     <Route path="/navRoutePath/:uuid/:ft/:in" component={NavRoutePath}/>

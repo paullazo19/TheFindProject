@@ -70,16 +70,15 @@ export default React.createClass({
         this.state.floorNumber.hasError === false &&
         this.state.roomDescription.hasError === false) {
       //Direct user to starting screen for route creation
-      this.directUserToCreateRoutePath();
+      this.directUserToStartCreateScreen();
       console.log("ran direct user");
     } else {
       this.checkAllInputStates();
     }
   },
-  directUserToCreateRoutePath(){
+  directUserToStartCreateScreen(){
     console.log("info pushed");
-    hashHistory.push(`/createRoutePath/${this.refs.building.value}/${this.refs.floor.value}/${this.refs.room.value}/${this.props.params.ft}/${this.props.params.in}`)
-
+    hashHistory.push(`/startCreate/${this.refs.building.value}/${this.refs.floor.value}/${this.refs.room.value}/${this.props.params.ft}/${this.props.params.in}`)
   },
   render() {
     return (
