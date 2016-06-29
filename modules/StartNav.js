@@ -6,7 +6,7 @@ import _ from 'underscore'
 
 export default React.createClass({
   startNav(e){
-    hashHistory.push(`/navRoutePath/${this.props.params.uuid}/${this.props.params.ft}/${this.props.params.in}`)
+    hashHistory.push(`/navRoutePath/${this.props.params.path_id}/${this.props.params.ft}/${this.props.params.in}`)
   },
   render() {
     return(

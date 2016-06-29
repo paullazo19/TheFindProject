@@ -19,7 +19,7 @@ render((
     <Route path="/startCreate/:building/:floor/:room/:ft/:in" component={StartCreate}/>
     <Route path="/createRoutePath/:building/:floor/:room/:ft/:in" component={CreateRoutePath}/>
     <Route path="/allRoutes" component={AllRoutes}/>
-    <Route path="/startNav/:uuid/:ft/:in" component={StartNav}/>
-    <Route path="/navRoutePath/:uuid/:ft/:in" component={NavRoutePath}/>
+    <Route path="/startNav/:path_id/:ft/:in" component={StartNav}/>
+    <Route path="/navRoutePath/:path_id/:ft/:in" component={NavRoutePath}/>
   </Router>
 ), document.getElementById('app'))

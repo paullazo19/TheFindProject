@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Router, Route, hashHistory, IndexRoute, Link } from 'react-router'
 import RoutesData from '../data/RoutesData'
 import _ from 'underscore'
+import $ from 'jquery'
 
 var route = [];
 var stepHeading;
@@ -20,6 +21,7 @@ var strideMeters;
 export default React.createClass({
   getDefaultProps(){
     return {
+      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path",
       RoutesData: RoutesData
     }
   },
@@ -44,18 +46,29 @@ export default React.createClass({
         currentHeading: position.coords.heading
       })
     }, null)
-    this.segmentRoute();
+    // this.segmentRoute();
 
     _.delay(this.setCurrentHeading, 1000);
 
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
     navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
+
+    $.ajax({
+      url: `${this.props.routePathSource}/${this.props.params.path_id}`,
+      method: "GET",
+      dataType: "JSON",
+      success: (resp)=> {
+        console.log(resp);
+        this.routeData = resp
+        this.segmentRoute();
+      }
+    })
   },
   convertToStrideMeters(feet, inches){
     heightInches = Number(feet*12) + Number(inches)
     strideInches = heightInches/2.3;
     strideMeters = strideInches*0.0254;
-    console.log("hss", heightInches, strideInches, strideMeters);
+    // console.log("hss", heightInches, strideInches, strideMeters);
     // return strideMeters
   },
   setCurrentHeading(){
@@ -64,7 +77,7 @@ export default React.createClass({
       })
   },
   convertStepNum(speed){
-    console.log("stride meters", strideMeters);
+    // console.log("stride meters", strideMeters);
     return speed / strideMeters
   },
   onWatchPosition(position){
@@ -73,7 +86,7 @@ export default React.createClass({
     //   var remainder = this.currentSteps > 1? this.currentSteps-1 : 0;
     //   this.currentSteps = remainder;
     // }
-    console.log("watching");
+    // console.log("watching");
     this.currentSteps += this.convertStepNum(position.coords.speed);
     // convert stepNum in function
     this.setState({
@@ -100,11 +113,18 @@ export default React.createClass({
     }
     // this.turnDetected = "";
   },
-  startNav(e){
-
-  },
   segmentRoute(){
-    this.props.RoutesData[0].route.map((step, i)=> {
+    console.log("routeData", this.routeData);
+    var array = $.map(this.routeData, (el)=> {
+      return el
+    });
+    array.shift();
+    array = $.grep(array, (n, i)=> {
+      return (i % 2 != 0)
+    });
+    
+    console.log("array", array);
+    this.routeData.map((step, i)=> {
       if (i != 0) {
           var difference = step.heading - this.props.RoutesData[0].route[i-1].heading;
       }
@@ -150,6 +170,53 @@ export default React.createClass({
       }
     })
   },
+  // segmentRoute(){
+  //   this.props.RoutesData[0].route.map((step, i)=> {
+  //     if (i != 0) {
+  //         var difference = step.heading - this.props.RoutesData[0].route[i-1].heading;
+  //     }
+  //     if (difference > 0) {
+  //       difference = difference - 360;
+  //     }
+  //     difference = Math.abs(difference);
+  //     if (difference >= 240 && difference <= 300) {
+  //
+  //       if (isNaN(adjustedStepCluster) === true) {
+  //         previousStepCluster = 0;
+  //         adjustedStepCluster = 0;
+  //       } else {
+  //         previousStepCluster = adjustedStepCluster;
+  //       }
+  //
+  //       currentStepCluster = i+1;
+  //       adjustedStepCluster = currentStepCluster - previousStepCluster;
+  //
+  //       // this.state.route.push(adjustedStepCluster);
+  //       // this.state.route.push("turn right");
+  //       route.push(adjustedStepCluster);
+  //       route.push("turn right");
+  //
+  //       // console.log("previous", previousStepCluster, "current", currentStepCluster, "adjusted", adjustedStepCluster);
+  //     }
+  //     if (difference >= 60 && difference <= 120) {
+  //
+  //         if (isNaN(adjustedStepCluster) === true) {
+  //           previousStepCluster = 0;
+  //           adjustedStepCluster = 0;
+  //         } else {
+  //           previousStepCluster = adjustedStepCluster;
+  //         }
+  //
+  //         currentStepCluster = i+1;
+  //         adjustedStepCluster = currentStepCluster - previousStepCluster;
+  //
+  //         // this.state.route.push(adjustedStepCluster);
+  //         // this.state.route.push("turn right");
+  //         route.push(adjustedStepCluster);
+  //         route.push("turn left");
+  //     }
+  //   })
+  // },
   navigateRoute(){
     console.log(this.state.segment, "route length", route.length);
     // var routeSegment;

@@ -30,11 +30,11 @@ export default React.createClass({
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
     navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
 
-    setInterval(()=>{
-      stepCluster.push({value: 1, heading: 225});
-      // value="[{value:1, heading: 225}]"
-      console.log("step", stepCluster);
-    }, 2000);
+    // setInterval(()=>{
+    //   stepCluster.push({value: 1, heading: 225});
+    //   // value="[{value:1, heading: 225}]"
+    //   console.log("step", stepCluster);
+    // }, 2000);
   },
   convertToStrideMeters(feet, inches){
     heightInches = Number(feet*12) + Number(inches)
@@ -68,20 +68,36 @@ export default React.createClass({
     hashHistory.push("/allRoutes")
   },
   submitRoutePath(e){
-    console.log("route submitted");
     e.preventDefault();
     var serializedForm = Serialize(this.refs.routePathForm, {hash: true})
-    $.post(this.props.routePathSource, serializedForm, (resp)=> {
-
-      $.get(this.props.routePathSource, (resp)=> {
-        this.latestPath = resp[0]._id;
-        console.log("latest", this.latestPath);
-        if (this.latestPath != null) {
-          this.submitRouteLabel();
-        }
-      })
-
+    $.ajax({
+      url: this.props.routePathSource,
+      method: "POST",
+      dataType: "JSON",
+      data: {
+        route: stepCluster
+      },
+      success: (resp)=> {
+        $.get(this.props.routePathSource, (resp)=> {
+          this.latestPath = resp[0]._id;
+          console.log("latest", this.latestPath);
+          if (this.latestPath != null) {
+            this.submitRouteLabel();
+          }
+        })
+      }
     });
+    // $.post(this.props.routePathSource, serializedForm, (resp)=> {
+    //
+    //   $.get(this.props.routePathSource, (resp)=> {
+    //     this.latestPath = resp[0]._id;
+    //     console.log("latest", this.latestPath);
+    //     if (this.latestPath != null) {
+    //       this.submitRouteLabel();
+    //     }
+    //   })
+    //
+    // });
   },
   // getRouteLabels(){
   //   $.get(this.props.routeLabelSource, (resp)=> {
@@ -105,7 +121,7 @@ export default React.createClass({
         building: this.props.params.building,
         floor: this.props.params.floor,
         room: this.props.params.room,
-        path_id: this.latestLabel
+        path_id: this.latestPath
       },
       success: (resp)=> {
         alert("Route successfully submitted. Thank you!");

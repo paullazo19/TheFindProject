@@ -30,26 +30,15 @@ export default React.createClass({
     })
   },
   render() {
-    // console.log(RoutesData);
-    console.log(this.state.labels);
     return (
       <div>
         <h2 className="routes--heading">All Routes</h2>
-        <ul>
+        <ul className="routesList">
           { this.state.labels.map((label, i)=> {
-            return <li key={i}>{label.building}</li>
+            return <Link className="route--link" to={`/StartNav/${label.path_id}/${this.props.params.ft}/${this.props.params.in}`} key={i}>Building: {label.building}, Floor: {label.floor}, Room: {label.room}</Link>
             })
           }
         </ul>
-
-        <ul className="routesList">
-          { this.props.RoutesData.map((route, i)=> {
-            return  <Link to={`/StartNav/${route.uuid}/${this.props.params.ft}/${this.props.params.in}`} className="route--link" key={i}>{`Building: ${route.label.building}, Floor: ${route.label.floor}, Room: ${route.label.room}`}</Link>
-          }) }
-        </ul>
-
-
-
       </div>
     )
   }
