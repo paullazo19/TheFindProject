@@ -82,7 +82,7 @@ export default React.createClass({
   },
   render() {
     return (
-      <div>
+      <div className="wrapper">
         <form className={this.checkAllInputStates()? "form--error" : ""} method="POST" ref="routeLabelForm" action="#" onSubmit={this.handleCreateRouteSubmit}>
           <label>
             <span className="hidden__label">Building address or name</span>
@@ -99,7 +99,7 @@ export default React.createClass({
             <input className="createRouteLabel__input" type="text" ref="room" name="room" autoComplete="off" placeholder="Room description" onKeyUp={this.handleRoomInputChange} defaultValue={this.props.params.room? this.props.params.room : ""}/>
           </label>
           <span className={this.state.roomDescription.hasError? "input--error" : "hide--error"}>Room description must have at least 5 characters.</span>
-          <input className="createRouteLabel__input" type="submit" value="submit"/>
+          <input className="submit" type="submit" value="create route label"/>
         </form>
       </div>
     )

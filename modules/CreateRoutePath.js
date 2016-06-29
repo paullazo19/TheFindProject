@@ -132,12 +132,12 @@ export default React.createClass({
   render() {
     console.log("stepCluster", stepCluster);
     return (
-      <div>
+      <div className="wrapper">
         <h2>steps: {this.currentSteps}</h2>
         <h2>cluster: {stepCluster}</h2>
         <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
           <input className="input--hidden" type="text" name="route" value={stepCluster} readOnly/>
-          <input type="submit" ref="endRoute" value="end route" />
+          <input className="submit" type="submit" ref="endRoute" value="end route" />
         </form>
 
         <form className="label__form--hidden" method="POST" action="#" ref="routeLabelForm">

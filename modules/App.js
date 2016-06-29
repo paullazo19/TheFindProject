@@ -64,10 +64,10 @@ export default React.createClass({
   },
   render() {
     return (
-      <div>
+      <div className="wrapper">
         <h1>Enter height</h1>
         <p className="heightSubmit__body">We&rsquo;re asking for your height to better calculate your steps while using the app, either navigating or creating routes.</p>
-        <form className={this.checkAllInputStates()? "heightInput--error" : ""} method="#" action="#" onSubmit={this.submitHeightForm}>
+        <form className={this.checkAllInputStates()? "heightInput--error" : "heightInput--form"} method="#" action="#" onSubmit={this.submitHeightForm}>
           <label><span className="hidden__label">Enter your height in feet here. The next field is for inches.</span>
             <input className="height__input" ref="ft" type="text" name="feet" autoComplete="off" onKeyUp={this.handleFeetInput} placeholder="feet"/>
             <span className={this.state.feetError? "input--error" : "hide--error"}>Height in feet must be a number between 0 and 8</span>
@@ -76,7 +76,7 @@ export default React.createClass({
             <input className="height__input" ref="in" type="text" name="inches" autoComplete="off" onKeyUp={this.handleInchesInput} placeholder="inches"/>
             <span className={this.state.inchesError? "input--error" : "hide--error"}>Remaining height in inches must be a number between 0 and 11</span>
           </label>
-          <input className="height__input" type="submit" value="submit"/>
+          <input className="submit" type="submit" value="calculate my stride length"/>
         </form>
       </div>
     )

@@ -18,7 +18,7 @@ render((
     <Route path="/createRouteLabel/:ft/:in" component={CreateRouteLabel}/>
     <Route path="/startCreate/:building/:floor/:room/:ft/:in" component={StartCreate}/>
     <Route path="/createRoutePath/:building/:floor/:room/:ft/:in" component={CreateRoutePath}/>
-    <Route path="/allRoutes" component={AllRoutes}/>
+    <Route path="/allRoutes/:ft/:in" component={AllRoutes}/>
     <Route path="/startNav/:path_id/:ft/:in" component={StartNav}/>
     <Route path="/navRoutePath/:path_id/:ft/:in" component={NavRoutePath}/>
   </Router>
