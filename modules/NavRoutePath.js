@@ -7,6 +7,7 @@ import $ from 'jquery'
 
 var route = [];
 var stepHeading;
+var array = [];
 
 var previousStepCluster;
 var currentStepCluster;
@@ -58,7 +59,7 @@ export default React.createClass({
       method: "GET",
       dataType: "JSON",
       success: (resp)=> {
-        console.log(resp);
+        // console.log(resp);
         this.routeData = resp
         this.segmentRoute();
       }
@@ -114,19 +115,25 @@ export default React.createClass({
     // this.turnDetected = "";
   },
   segmentRoute(){
-    console.log("routeData", this.routeData);
-    var array = $.map(this.routeData, (el)=> {
+    // console.log("routeData", this.routeData);
+    array = $.map(this.routeData, (el)=> {
       return el
     });
     array.shift();
     array = $.grep(array, (n, i)=> {
       return (i % 2 != 0)
     });
-    
-    console.log("array", array);
-    this.routeData.map((step, i)=> {
-      if (i != 0) {
-          var difference = step.heading - this.props.RoutesData[0].route[i-1].heading;
+
+    for(var i = 0; i < array.length; i++){
+      if (array[i] === "") {
+        array[i] = (Number(array[i-1]) + Number(array[i+1]))/2;
+        array[i].toString();
+      }
+    }
+    array.map((step, i)=> {
+      step = Number(step);
+      if (i > 0) {
+          var difference = step - array[i-1];
       }
       if (difference > 0) {
         difference = difference - 360;
@@ -249,10 +256,11 @@ export default React.createClass({
       // currentSegment = this.state.segment;
       // console.log("currentSegment", currentSegment);
     } else if (this.state.segment === route.length) {
-      alert("You've completed the route!");
+      // alert("You've completed the route!");
     }
   },
   render() {
+    console.log(route, route.length, array, array.length);
     // console.log("equal C", this.state.segment, "currentSegment", currentSegment);
     // console.log("bye", this.state.segment, route[0], route[1], route[2], route[3]);
     return(
