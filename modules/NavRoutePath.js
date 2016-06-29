@@ -29,7 +29,7 @@ export default React.createClass({
   getInitialState(){
     return{
       steps: 0,
-      deltaHeading: 0,
+      deltaHeading: 10,
       turnDetected: 0,
       currentHeading: 0,
       current: 0,
@@ -50,7 +50,14 @@ export default React.createClass({
     }, null)
     // this.segmentRoute();
 
-    _.delay(this.setCurrentHeading, 1000);
+    // _.delay(this.setCurrentHeading, 3000);
+
+    // this.delaySetCurrentHeading = _.delay(alert("delayed!"), 3000);
+
+    // setTimeout(alert("delayed", 3000));
+
+    // var log = _.bind(alert);
+    _.delay(this.setCurrentHeading, 3000);
 
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
     navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
@@ -266,10 +273,12 @@ export default React.createClass({
     // console.log("equal C", this.state.segment, "currentSegment", currentSegment);
     // console.log("bye", this.state.segment, route[0], route[1], route[2], route[3]);
     return(
-      <div>
+      <div className="wrapper">
         <h3>This is the individual route page.</h3>
         <p>{route[this.state.segment]}</p>
         <p>steps: {this.currentSteps}</p>
+        <p>current: {this.state.currentHeading}</p>
+        <p>delta: {this.state.deltaHeading}</p>
         <p>turn detected: {this.turnDetected}</p>
       </div>
     )
