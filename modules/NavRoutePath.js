@@ -39,6 +39,7 @@ export default React.createClass({
     }
   },
   componentDidMount(){
+    console.log("segment", this.state.segment, "route length", route.length);
     this.convertToStrideMeters(this.props.params.ft, this.props.params.in)
     this.currentSteps = 0;
     this.stepCluster = [];
@@ -132,7 +133,7 @@ export default React.createClass({
     }
     array.map((step, i)=> {
       step = Number(step);
-      if (i > 0) {
+      if (i != 0) {
           var difference = step - array[i-1];
       }
       if (difference > 0) {
@@ -225,7 +226,7 @@ export default React.createClass({
   //   })
   // },
   navigateRoute(){
-    console.log(this.state.segment, "route length", route.length);
+    console.log(this.state.segment, "route length", route.length, "route", route, "array", array);
     // var routeSegment;
     // route.map((routeSegment, i)=> {
     //   routeSegment = routeSegment
@@ -255,8 +256,9 @@ export default React.createClass({
       })
       // currentSegment = this.state.segment;
       // console.log("currentSegment", currentSegment);
-    } else if (this.state.segment === route.length) {
-      // alert("You've completed the route!");
+    } else if (this.state.segment === route.length && this.state.segment != 0) {
+      hashHistory.push("/")
+      alert("You've completed the route!");
     }
   },
   render() {
@@ -266,7 +268,6 @@ export default React.createClass({
     return(
       <div>
         <h3>This is the individual route page.</h3>
-        <p>{this.props.params.uuid}</p>
         <p>{route[this.state.segment]}</p>
         <p>steps: {this.currentSteps}</p>
         <p>turn detected: {this.turnDetected}</p>

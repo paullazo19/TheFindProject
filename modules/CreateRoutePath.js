@@ -65,7 +65,7 @@ export default React.createClass({
       // }
   },
   directToAllRoutes(){
-    hashHistory.push("/allRoutes")
+    hashHistory.push(`/allRoutes/${this.props.params.path_id}/${this.props.params.ft}/${this.props.params.in}`)
   },
   submitRoutePath(e){
     e.preventDefault();
@@ -144,7 +144,6 @@ export default React.createClass({
           <input type="text" name="building" value={this.props.params.building} readOnly/>
           <input type="text" name="floor" value={this.props.params.floor} readOnly/>
           <input type="text" name="room" value={this.props.params.room} readOnly/>
-
         </form>
       </div>
     )
