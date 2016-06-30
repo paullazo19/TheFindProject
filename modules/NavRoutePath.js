@@ -43,6 +43,7 @@ export default React.createClass({
     console.log("segment", this.state.segment, "route length", route.length);
     this.convertToStrideMeters(this.props.params.ft, this.props.params.in)
     this.currentSteps = 0;
+    this.displaySteps = 0;
     this.stepCluster = [];
     navigator.geolocation.getCurrentPosition((position)=> {
       this.setState({
@@ -98,6 +99,8 @@ export default React.createClass({
     // }
     // console.log("watching");
     this.currentSteps += this.convertStepNum(position.coords.speed);
+    this.displaySteps = this.currentSteps;
+    this.displaySteps = this.displaySteps.toFixed(1)
     // convert stepNum in function
     this.setState({
       deltaHeading: position.coords.heading
@@ -230,6 +233,7 @@ export default React.createClass({
       <div className="wrapper">
         <Header/>
         <h1 className="nav--command">{route[this.state.segment]}</h1>
+        <h2 className="nav--progress">steps progress: {this.displaySteps}</h2>
       </div>
     )
   }

@@ -209,6 +209,10 @@ body {
   font-size: 15rem;
   text-align: center; }
 
+.nav--progress {
+  font-size: 7rem;
+  text-align: center; }
+
 .modal--show {
   position: absolute;
   top: 0;
