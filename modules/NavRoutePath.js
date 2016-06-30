@@ -162,7 +162,7 @@ export default React.createClass({
 
         // this.state.route.push(adjustedStepCluster);
         // this.state.route.push("turn right");
-        route.push(`${adjustedStepCluster} steps`);
+        route.push(adjustedStepCluster);
         route.push("turn right");
 
         // console.log("previous", previousStepCluster, "current", currentStepCluster, "adjusted", adjustedStepCluster);
@@ -181,13 +181,14 @@ export default React.createClass({
 
           // this.state.route.push(adjustedStepCluster);
           // this.state.route.push("turn right");
-          route.push(`${adjustedStepCluster} steps`);
+          route.push(adjustedStepCluster);
           route.push("turn left");
       }
     })
   },
   navigateRoute(){
-    console.log(this.state.segment, "route length", route.length, "route", route, "array", array);
+    // console.log(this.state.segment, "route length", route.length, "route", route, "array", array);
+    console.log(route, "ad", adjustedStepCluster, "prev", previousStepCluster, "curr", currentStepCluster);
     // var routeSegment;
     // route.map((routeSegment, i)=> {
     //   routeSegment = routeSegment
@@ -220,6 +221,7 @@ export default React.createClass({
     } else if (this.state.segment === route.length && this.state.segment != 0) {
       hashHistory.push("/")
       alert("You've completed the route!");
+      route = [];
     }
   },
   render() {
@@ -227,8 +229,7 @@ export default React.createClass({
     return(
       <div className="wrapper">
         <Header/>
-        <h1>{route[this.state.segment]}</h1>
-        <p>steps progress: {this.currentSteps}</p>
+        <h1 className="nav--command">{route[this.state.segment]}</h1>
       </div>
     )
   }

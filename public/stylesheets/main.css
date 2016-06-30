@@ -85,6 +85,7 @@ body {
   -ms-outline: none;
   outline: none;
   background-color: steelblue;
+  border-radius: 1rem;
   color: white;
   display: block;
   font-size: 4rem;
@@ -98,6 +99,10 @@ body {
   margin-top: 3rem;
   margin-bottom: 1rem;
   text-align: center; }
+
+.home--intro {
+  font-size: 4rem;
+  padding-bottom: 1rem; }
 
 .landing--link {
   background-color: #4fba6f;
@@ -199,6 +204,10 @@ body {
 
 .routeInformation--middle {
   padding: 3rem; }
+
+.nav--command {
+  font-size: 15rem;
+  text-align: center; }
 
 .modal--show {
   position: absolute;

@@ -9,11 +9,13 @@ import CreateRoutePath from './modules/CreateRoutePath'
 import AllRoutes from './modules/AllRoutes'
 import StartNav from './modules/StartNav'
 import NavRoutePath from './modules/NavRoutePath'
+import Home from './modules/Home'
 
 
 render((
   <Router history={hashHistory}>
-    <Route path="/" component={App}/>
+    <Route path="/" component={Home}/>
+    <Route path="/app" component={App}/>
     <Route path="/landing/:ft/:in" component={Landing}/>
     <Route path="/createRouteLabel/:ft/:in" component={CreateRouteLabel}/>
     <Route path="/startCreate/:building/:floor/:room/:ft/:in" component={StartCreate}/>
