@@ -23,7 +23,7 @@ var strideMeters;
 export default React.createClass({
   getDefaultProps(){
     return {
-      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path",
+      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path2",
       RoutesData: RoutesData
     }
   },
@@ -40,7 +40,6 @@ export default React.createClass({
     }
   },
   componentDidMount(){
-    console.log("segment", this.state.segment, "route length", route.length);
     this.convertToStrideMeters(this.props.params.ft, this.props.params.in)
     this.currentSteps = 0;
     this.displaySteps = 0;
@@ -50,15 +49,7 @@ export default React.createClass({
         currentHeading: position.coords.heading
       })
     }, null)
-    // this.segmentRoute();
 
-    // _.delay(this.setCurrentHeading, 3000);
-
-    // this.delaySetCurrentHeading = _.delay(alert("delayed!"), 3000);
-
-    // setTimeout(alert("delayed", 3000));
-
-    // var log = _.bind(alert);
     _.delay(this.setCurrentHeading, 3000);
 
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
@@ -69,7 +60,6 @@ export default React.createClass({
       method: "GET",
       dataType: "JSON",
       success: (resp)=> {
-        // console.log(resp);
         this.routeData = resp
         this.segmentRoute();
       }
@@ -79,8 +69,6 @@ export default React.createClass({
     heightInches = Number(feet*12) + Number(inches)
     strideInches = heightInches/2.3;
     strideMeters = strideInches*0.0254;
-    // console.log("hss", heightInches, strideInches, strideMeters);
-    // return strideMeters
   },
   setCurrentHeading(){
       this.setState({
@@ -88,16 +76,9 @@ export default React.createClass({
       })
   },
   convertStepNum(speed){
-    // console.log("stride meters", strideMeters);
     return speed / strideMeters
   },
   onWatchPosition(position){
-    // if (this.currentSteps >= 1) {
-    //   this.stepCluster.push({value: 1, heading: position.coords.heading})
-    //   var remainder = this.currentSteps > 1? this.currentSteps-1 : 0;
-    //   this.currentSteps = remainder;
-    // }
-    // console.log("watching");
     this.currentSteps += this.convertStepNum(position.coords.speed);
     this.displaySteps = this.currentSteps;
     this.displaySteps = this.displaySteps.toFixed(1)
@@ -124,10 +105,8 @@ export default React.createClass({
     if (turn >= 60 && turn <= 120) {
       this.turnDetected = "turn left";
     }
-    // this.turnDetected = "";
   },
   segmentRoute(){
-    // console.log("routeData", this.routeData);
     array = $.map(this.routeData, (el)=> {
       return el
     });
@@ -163,12 +142,8 @@ export default React.createClass({
         currentStepCluster = i+1;
         adjustedStepCluster = currentStepCluster - previousStepCluster;
 
-        // this.state.route.push(adjustedStepCluster);
-        // this.state.route.push("turn right");
         route.push(adjustedStepCluster);
         route.push("turn right");
-
-        // console.log("previous", previousStepCluster, "current", currentStepCluster, "adjusted", adjustedStepCluster);
       }
       if (difference >= 60 && difference <= 120) {
 
@@ -182,45 +157,27 @@ export default React.createClass({
           currentStepCluster = i+1;
           adjustedStepCluster = currentStepCluster - previousStepCluster;
 
-          // this.state.route.push(adjustedStepCluster);
-          // this.state.route.push("turn right");
           route.push(adjustedStepCluster);
           route.push("turn left");
       }
     })
   },
   navigateRoute(){
-    // console.log(this.state.segment, "route length", route.length, "route", route, "array", array);
-    console.log(route, "ad", adjustedStepCluster, "prev", previousStepCluster, "curr", currentStepCluster);
-    // var routeSegment;
-    // route.map((routeSegment, i)=> {
-    //   routeSegment = routeSegment
-    // })
-    // this.turnDetected = "turn right";
-    // this.turnDetected = "turn left";
-    // currentSegment = route[this.state.segment];
+    console.log("route:", route );
     if (this.currentSteps >= route[this.state.segment]) {
-      // var remainder = this.currentSteps > 1? this.currentSteps-1 : 0;
-      // currentSegment = this.stepCluster.length === 0 ? route[0] : route[1];
-      console.log("equal 1");
+
       this.setState({
         segment: this.state.segment + 1
       })
       this.currentSteps = 0;
-      // currentSegment = this.state.segment + 1;
     } else if (route[this.state.segment] === "turn right" && this.turnDetected === "turn right") {
-      console.log("equal 2");
       this.setState({
         segment: this.state.segment + 1
       })
-      // currentSegment = this.state.segment + 1;
     } else if (route[this.state.segment] === "turn left" && this.turnDetected === "turn left") {
-      console.log("equal 3");
       this.setState({
         segment: this.state.segment + 1
       })
-      // currentSegment = this.state.segment;
-      // console.log("currentSegment", currentSegment);
     } else if (this.state.segment === route.length && this.state.segment != 0) {
       hashHistory.push("/")
       alert("You've completed the route!");
@@ -228,7 +185,6 @@ export default React.createClass({
     }
   },
   render() {
-    console.log(route, route.length, array, array.length);
     return(
       <div className="wrapper">
         <Header/>
