@@ -3,6 +3,7 @@ import { Router, Route, hashHistory, IndexRoute, Link } from 'react-router'
 import RoutesData from '../data/RoutesData'
 import NavRoutePath from './NavRoutePath'
 import $ from 'jquery'
+import Header from './Header'
 
 var routes;
 
@@ -32,6 +33,7 @@ export default React.createClass({
   render() {
     return (
       <div className="wrapper">
+        <Header/>
         <h2 className="routes--heading">All Routes</h2>
         <ul className="routesList">
           { this.state.labels.map((label, i)=> {

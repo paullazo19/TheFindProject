@@ -4,6 +4,7 @@ import { Router, Route, hashHistory, IndexRoute, Link } from 'react-router'
 import RoutesData from '../data/RoutesData'
 import _ from 'underscore'
 import $ from 'jquery'
+import Header from './Header'
 
 var route = [];
 var stepHeading;
@@ -161,7 +162,7 @@ export default React.createClass({
 
         // this.state.route.push(adjustedStepCluster);
         // this.state.route.push("turn right");
-        route.push(adjustedStepCluster);
+        route.push(`${adjustedStepCluster} steps`);
         route.push("turn right");
 
         // console.log("previous", previousStepCluster, "current", currentStepCluster, "adjusted", adjustedStepCluster);
@@ -180,58 +181,11 @@ export default React.createClass({
 
           // this.state.route.push(adjustedStepCluster);
           // this.state.route.push("turn right");
-          route.push(adjustedStepCluster);
+          route.push(`${adjustedStepCluster} steps`);
           route.push("turn left");
       }
     })
   },
-  // segmentRoute(){
-  //   this.props.RoutesData[0].route.map((step, i)=> {
-  //     if (i != 0) {
-  //         var difference = step.heading - this.props.RoutesData[0].route[i-1].heading;
-  //     }
-  //     if (difference > 0) {
-  //       difference = difference - 360;
-  //     }
-  //     difference = Math.abs(difference);
-  //     if (difference >= 240 && difference <= 300) {
-  //
-  //       if (isNaN(adjustedStepCluster) === true) {
-  //         previousStepCluster = 0;
-  //         adjustedStepCluster = 0;
-  //       } else {
-  //         previousStepCluster = adjustedStepCluster;
-  //       }
-  //
-  //       currentStepCluster = i+1;
-  //       adjustedStepCluster = currentStepCluster - previousStepCluster;
-  //
-  //       // this.state.route.push(adjustedStepCluster);
-  //       // this.state.route.push("turn right");
-  //       route.push(adjustedStepCluster);
-  //       route.push("turn right");
-  //
-  //       // console.log("previous", previousStepCluster, "current", currentStepCluster, "adjusted", adjustedStepCluster);
-  //     }
-  //     if (difference >= 60 && difference <= 120) {
-  //
-  //         if (isNaN(adjustedStepCluster) === true) {
-  //           previousStepCluster = 0;
-  //           adjustedStepCluster = 0;
-  //         } else {
-  //           previousStepCluster = adjustedStepCluster;
-  //         }
-  //
-  //         currentStepCluster = i+1;
-  //         adjustedStepCluster = currentStepCluster - previousStepCluster;
-  //
-  //         // this.state.route.push(adjustedStepCluster);
-  //         // this.state.route.push("turn right");
-  //         route.push(adjustedStepCluster);
-  //         route.push("turn left");
-  //     }
-  //   })
-  // },
   navigateRoute(){
     console.log(this.state.segment, "route length", route.length, "route", route, "array", array);
     // var routeSegment;
@@ -270,16 +224,11 @@ export default React.createClass({
   },
   render() {
     console.log(route, route.length, array, array.length);
-    // console.log("equal C", this.state.segment, "currentSegment", currentSegment);
-    // console.log("bye", this.state.segment, route[0], route[1], route[2], route[3]);
     return(
       <div className="wrapper">
-        <h3>This is the individual route page.</h3>
-        <p>{route[this.state.segment]}</p>
-        <p>steps: {this.currentSteps}</p>
-        <p>current: {this.state.currentHeading}</p>
-        <p>delta: {this.state.deltaHeading}</p>
-        <p>turn detected: {this.turnDetected}</p>
+        <Header/>
+        <h1>{route[this.state.segment]}</h1>
+        <p>steps progress: {this.currentSteps}</p>
       </div>
     )
   }

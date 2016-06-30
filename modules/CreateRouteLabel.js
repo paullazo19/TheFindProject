@@ -4,6 +4,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router'
 import $ from 'jquery'
 import Serialize from 'form-serialize'
 import Validator from 'validator'
+import Header from './Header'
 
 var inputElement;
 
@@ -83,6 +84,7 @@ export default React.createClass({
   render() {
     return (
       <div className="wrapper">
+        <Header/>
         <form className={this.checkAllInputStates()? "form--error" : ""} method="POST" ref="routeLabelForm" action="#" onSubmit={this.handleCreateRouteSubmit}>
           <label>
             <span className="hidden__label">Building address or name</span>

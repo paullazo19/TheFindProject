@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Router, Route, hashHistory, IndexRoute } from 'react-router'
 import Validator from 'validator'
+import Header from './Header'
 
 export default React.createClass({
   getInitialState(){
@@ -65,6 +66,7 @@ export default React.createClass({
   render() {
     return (
       <div className="wrapper">
+        <Header/>
         <h1>Enter height</h1>
         <p className="heightSubmit__body">We&rsquo;re asking for your height to better calculate your steps while using the app, either navigating or creating routes.</p>
         <form className={this.checkAllInputStates()? "heightInput--error" : "heightInput--form"} method="#" action="#" onSubmit={this.submitHeightForm}>

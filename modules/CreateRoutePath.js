@@ -4,6 +4,7 @@ import { Router, Route, hashHistory, IndexRoute, Link } from 'react-router'
 import $ from 'jquery'
 import Serialize from 'form-serialize'
 import _ from 'underscore'
+import Header from './Header'
 
 var heightInches;
 var strideInches;
@@ -133,6 +134,7 @@ export default React.createClass({
     console.log("stepCluster", stepCluster);
     return (
       <div className="wrapper">
+        <Header/>
         <h2>steps: {this.currentSteps}</h2>
         <h2>cluster: {stepCluster}</h2>
         <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
