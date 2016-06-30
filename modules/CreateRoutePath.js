@@ -4,146 +4,149 @@ import { Router, Route, hashHistory, IndexRoute, Link } from 'react-router'
 import $ from 'jquery'
 import Serialize from 'form-serialize'
 import _ from 'underscore'
+import Header from './Header'
 
+var heightInches;
+var strideInches;
+var strideMeters;
 
-var stepCluster = [5];
-var stepNum;
+var stepCluster = [];
 
 export default React.createClass({
   getDefaultProps(){
     return {
-      routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label",
-      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path"
-    }
-  },
-  getInitialState(){
-    return{
-      steps: 0,
-      deltaHeading: 0,
-      turnDetected: 0,
-      currentHeading: 0,
-      modal: {
-        isOn: true
-      },
-      startRecord: {
-        isOn: false
-      },
-      leftTurn: {
-        detected: false
-      },
-      rightTurn: {
-        detected: false
-      }
+      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path",
+      routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label"
     }
   },
   componentDidMount(){
-    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 500);
-    this.setState({
-      currentHeading: this.state.deltaHeading
-    })
+    // this.getRouteLabels();
+    this.convertToStrideMeters(this.props.params.ft, this.props.params.in)
+    this.currentSteps = 0;
+    // stepCluster = [];
+    console.log("cluster", stepCluster);
+    navigator.geolocation.getCurrentPosition((position)=> {
+      console.log("got current position");
+    }, null)
+    this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
+    navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
+
+    // setInterval(()=>{
+    //   stepCluster.push({value: 1, heading: 225});
+    //   // value="[{value:1, heading: 225}]"
+    //   console.log("step", stepCluster);
+    // }, 2000);
+  },
+  convertToStrideMeters(feet, inches){
+    heightInches = Number(feet*12) + Number(inches)
+    strideInches = heightInches/2.3;
+    strideMeters = strideInches*0.0254;
+    console.log("hss", heightInches, strideInches, strideMeters);
+    // return strideMeters
   },
   convertStepNum(speed){
-    return speed / 0.565
+    console.log("stride meters", strideMeters);
+    return speed / strideMeters
   },
   onWatchPosition(position){
-    // convert stepNum in function
-    console.log("watched");
-    this.convertStepNum();
-    this.setState({
-      steps: this.state.steps + this.convertStepNum(position.coords.speed),
-      deltaHeading: position.coords.heading,
-      turnDetected: this.state.currentHeading - this.state.deltaHeading
-    })
-    this.handleTurning();
-  },
-  componentWillUpdate(){
-    console.log(this.state.steps);
-    if (this.state.startRecord.isOn == true) {
-      navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
+    console.log(stepCluster);
+    if (this.currentSteps >= 1) {
+      stepCluster.push({value: 1, heading: position.coords.heading})
+      var remainder = this.currentSteps > 1? this.currentSteps-1 : 0;
+      this.currentSteps = remainder;
     }
-  },
-  handleTurning(e){
-    if (typeof(stepCluster[stepCluster.length -1]) === "number") {
-      if (Math.abs(this.state.turnDetected) > 60 && Math.abs(this.state.turnDetected) < 120) {
-        stepCluster.push("turn right");
-        this.setState({
-            currentHeading: this.state.deltaHeading,
-            rightTurn: {
-              detected: true
-            }
-        })
-        this.handleStepCluster();
-
-      } else if (Math.abs(this.state.turnDetected) > 240 && Math.abs(this.state.turnDetected) < 300) {
-        stepCluster.push("turn left");
-        this.setState({
-            currentHeading: this.state.deltaHeading,
-            leftTurn: {
-              detected: true
-            }
-        })
-        this.handleStepCluster();
-      }
-    }
-  },
-  handleStepCluster(e){
-      stepCluster.push(Math.ceil(this.state.steps));
-      this.setState({
-        steps: 0
-      })
+    this.currentSteps += this.convertStepNum(position.coords.speed);
+      // // convert stepNum in function
+      // this.setState({
+      //   steps: this.state.steps + this.convertStepNum(position.coords.speed),
+      //   deltaHeading: position.coords.heading
+      // })
+      // if (this.state.steps > 0) {
+      //   this.calcDifference(this.state.currentHeading, this.state.deltaHeading);
+      // }
   },
   directToAllRoutes(){
-    hashHistory.push("/AllRoutes")
+    hashHistory.push(`/allRoutes/${this.props.params.path_id}/${this.props.params.ft}/${this.props.params.in}`)
   },
   submitRoutePath(e){
     e.preventDefault();
-    this.directToAllRoutes();
     var serializedForm = Serialize(this.refs.routePathForm, {hash: true})
-    $.post(this.props.routePathSource, serializedForm, (resp)=> {
-      alert("Route successfully submitted. Thank you!")
-
-    });
-  },
-  startRecording(e){
-    this.setState({
-      modal: {
-        isOn: false
+    $.ajax({
+      url: this.props.routePathSource,
+      method: "POST",
+      dataType: "JSON",
+      data: {
+        route: stepCluster
       },
-      startRecord: {
-        isOn: true
+      success: (resp)=> {
+        $.get(this.props.routePathSource, (resp)=> {
+          this.latestPath = resp[0]._id;
+          console.log("latest", this.latestPath);
+          if (this.latestPath != null) {
+            this.submitRouteLabel();
+          }
+        })
       }
-    })
-    console.log(this.props.params.routeLabelForm);
-    var serializedForm = Serialize(this.props.params.routeLabelForm, {hash: true})
-    $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
-      console.log("sent label form");
-      this.getRouteLabels();
     });
+    // $.post(this.props.routePathSource, serializedForm, (resp)=> {
+    //
+    //   $.get(this.props.routePathSource, (resp)=> {
+    //     this.latestPath = resp[0]._id;
+    //     console.log("latest", this.latestPath);
+    //     if (this.latestPath != null) {
+    //       this.submitRouteLabel();
+    //     }
+    //   })
+    //
+    // });
   },
-  getRouteLabels(){
-    $.get(this.props.routeLabelSource, (resp)=> {
-      this.setState({ routeLabels: resp })
+  // getRouteLabels(){
+  //   $.get(this.props.routeLabelSource, (resp)=> {
+  //     this.latestLabel = resp[0]._id;
+  //     console.log(this.latestLabel);
+  //   })
+  // },
+  submitRouteLabel(){
+    var serializedForm = Serialize(this.refs.routeLabelForm, {hash: true})
+    // $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
+    //   alert("Route successfully submitted. Thank you!");
+    //   this.directToAllRoutes();
+    //   console.log("sent label form");
+    // });
+
+    $.ajax({
+      url: this.props.routeLabelSource,
+      method: "POST",
+      dataType: "JSON",
+      data: {
+        building: this.props.params.building,
+        floor: this.props.params.floor,
+        room: this.props.params.room,
+        path_id: this.latestPath
+      },
+      success: (resp)=> {
+        alert("Route successfully submitted. Thank you!");
+        this.directToAllRoutes();
+      }
     })
   },
   render() {
+    console.log("stepCluster", stepCluster);
     return (
-      <div>
-      <div className={this.state.modal.isOn? "modal--show" : "modal--hide"}>
-        <Link className="startRecord--back" to={`/createRouteLabel/${this.props.params.building}/${this.props.params.floor}/${this.props.params.room}/${this.refs.routeLabelForm}`}>Back</Link>
-        <div className="routeInfo">Building: {`${this.props.params.building}`}<span className="routeInfo--middle">Floor: {`${this.props.params.floor}`}</span>Room: {`${this.props.params.room}`}</div>
-        <p className="startRecord--warning">To ensure optimal route accuracy, please begin route inside the building at the main entrance with your back to the door. Thank you.</p>
-        <a className="startRecord--button" ref="startRecord" onClick={this.startRecording}>Start Recording</a>
-      </div>
-      <h2>steps: {this.state.steps}</h2>
-      <h2>current heading: {this.state.currentHeading}</h2>
-      <h2>delta heading: {this.state.deltaHeading}</h2>
+      <div className="wrapper">
+        <Header/>
+        <h2>steps: {this.currentSteps}</h2>
+        <h2>cluster: {stepCluster}</h2>
+        <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
+          <input className="input--hidden" type="text" name="route" value={stepCluster} readOnly/>
+          <input className="submit" type="submit" ref="endRoute" value="end route" />
+        </form>
 
-      <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
-        <input type="text" name="stepCluster" value={stepCluster} readOnly/>
-        <input type="submit" ref="endRoute" value="end route"/>
-      </form>
-
-      <ul>{stepCluster}</ul>
+        <form className="label__form--hidden" method="POST" action="#" ref="routeLabelForm">
+          <input type="text" name="building" value={this.props.params.building} readOnly/>
+          <input type="text" name="floor" value={this.props.params.floor} readOnly/>
+          <input type="text" name="room" value={this.props.params.room} readOnly/>
+        </form>
       </div>
     )
   }

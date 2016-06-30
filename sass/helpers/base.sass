@@ -1,11 +1,30 @@
 // Base
 
+*
+  box-sizing: border-box
+
 html
   font-size: 62.5%
 
-h2
-  font-size: 7rem
-
 body
   font-family: "Helvetica", sans-serif
-  font-size: 2rem
+  font-size: 4rem
+
+.submit
+  +appearance(none)
+  +border(none)
+  +outline(none)
+  background-color: $navy--submit
+  color: $white
+  display: block
+  font-size: 4rem
+  font-weight: 600
+  padding: 2rem
+  padding-left: 1rem
+  width: 100%
+
+.TFP__logo--header
+  display: block
+  margin-top: 3rem
+  margin-bottom: 1rem
+  text-align: center

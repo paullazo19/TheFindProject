@@ -4,6 +4,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router'
 import $ from 'jquery'
 import Serialize from 'form-serialize'
 import Validator from 'validator'
+import Header from './Header'
 
 var inputElement;
 
@@ -70,20 +71,20 @@ export default React.createClass({
         this.state.floorNumber.hasError === false &&
         this.state.roomDescription.hasError === false) {
       //Direct user to starting screen for route creation
-      this.directUserToCreateRoutePath();
+      this.directUserToStartCreateScreen();
       console.log("ran direct user");
     } else {
       this.checkAllInputStates();
     }
   },
-  directUserToCreateRoutePath(){
+  directUserToStartCreateScreen(){
     console.log("info pushed");
-    hashHistory.push(`/createRoutePath/${this.refs.building.value}/${this.refs.floor.value}/${this.refs.room.value}/${this.refs.routeLabelForm}`)
-
+    hashHistory.push(`/startCreate/${this.refs.building.value}/${this.refs.floor.value}/${this.refs.room.value}/${this.props.params.ft}/${this.props.params.in}`)
   },
   render() {
     return (
-      <div>
+      <div className="wrapper">
+        <Header/>
         <form className={this.checkAllInputStates()? "form--error" : ""} method="POST" ref="routeLabelForm" action="#" onSubmit={this.handleCreateRouteSubmit}>
           <label>
             <span className="hidden__label">Building address or name</span>
@@ -100,7 +101,7 @@ export default React.createClass({
             <input className="createRouteLabel__input" type="text" ref="room" name="room" autoComplete="off" placeholder="Room description" onKeyUp={this.handleRoomInputChange} defaultValue={this.props.params.room? this.props.params.room : ""}/>
           </label>
           <span className={this.state.roomDescription.hasError? "input--error" : "hide--error"}>Room description must have at least 5 characters.</span>
-          <input className="createRouteLabel__input" type="submit" value="submit"/>
+          <input className="submit" type="submit" value="create route label"/>
         </form>
       </div>
     )
