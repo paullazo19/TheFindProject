@@ -24,7 +24,7 @@ describe('Create Route Label component', ()=> {
     };
 
     spyOn(e, "preventDefault");
-    spyOn(formRendered, "directUserToCreateRoutePath");
+    spyOn(formRendered, "directUserToStartCreateScreen");
     spyOn(formRendered, "handleBuildingInputChange");
     spyOn(formRendered, "checkAllInputStates").and.callThrough();
 
@@ -49,7 +49,7 @@ describe('Create Route Label component', ()=> {
     }
     formRendered.setState(stubbedData);
     formRendered.handleCreateRouteSubmit(e);
-    expect(formRendered.directUserToCreateRoutePath).toBeCalled();
+    expect(formRendered.directUserToStartCreateScreen).toBeCalled();
   });
 
   it('checks all input states when an error state is true', ()=> {

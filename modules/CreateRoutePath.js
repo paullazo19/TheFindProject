@@ -15,55 +15,33 @@ var stepCluster = [];
 export default React.createClass({
   getDefaultProps(){
     return {
-      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path",
-      routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label"
+      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path2",
+      routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label2"
     }
   },
   componentDidMount(){
-    // this.getRouteLabels();
     this.convertToStrideMeters(this.props.params.ft, this.props.params.in)
     this.currentSteps = 0;
-    // stepCluster = [];
-    console.log("cluster", stepCluster);
     navigator.geolocation.getCurrentPosition((position)=> {
-      console.log("got current position");
     }, null)
     this.throttleOnWatchPosition = _.throttle(this.onWatchPosition, 100);
     navigator.geolocation.watchPosition(this.throttleOnWatchPosition, null, {enableHighAccuracy: true});
-
-    // setInterval(()=>{
-    //   stepCluster.push({value: 1, heading: 225});
-    //   // value="[{value:1, heading: 225}]"
-    //   console.log("step", stepCluster);
-    // }, 2000);
   },
   convertToStrideMeters(feet, inches){
     heightInches = Number(feet*12) + Number(inches)
     strideInches = heightInches/2.3;
     strideMeters = strideInches*0.0254;
-    console.log("hss", heightInches, strideInches, strideMeters);
-    // return strideMeters
   },
   convertStepNum(speed){
-    console.log("stride meters", strideMeters);
     return speed / strideMeters
   },
   onWatchPosition(position){
-    console.log(stepCluster);
     if (this.currentSteps >= 1) {
       stepCluster.push({value: 1, heading: position.coords.heading})
       var remainder = this.currentSteps > 1? this.currentSteps-1 : 0;
       this.currentSteps = remainder;
     }
     this.currentSteps += this.convertStepNum(position.coords.speed);
-      // // convert stepNum in function
-      // this.setState({
-      //   steps: this.state.steps + this.convertStepNum(position.coords.speed),
-      //   deltaHeading: position.coords.heading
-      // })
-      // if (this.state.steps > 0) {
-      //   this.calcDifference(this.state.currentHeading, this.state.deltaHeading);
-      // }
   },
   directToAllRoutes(){
     hashHistory.push(`/allRoutes/${this.props.params.path_id}/${this.props.params.ft}/${this.props.params.in}`)
@@ -88,31 +66,9 @@ export default React.createClass({
         })
       }
     });
-    // $.post(this.props.routePathSource, serializedForm, (resp)=> {
-    //
-    //   $.get(this.props.routePathSource, (resp)=> {
-    //     this.latestPath = resp[0]._id;
-    //     console.log("latest", this.latestPath);
-    //     if (this.latestPath != null) {
-    //       this.submitRouteLabel();
-    //     }
-    //   })
-    //
-    // });
   },
-  // getRouteLabels(){
-  //   $.get(this.props.routeLabelSource, (resp)=> {
-  //     this.latestLabel = resp[0]._id;
-  //     console.log(this.latestLabel);
-  //   })
-  // },
   submitRouteLabel(){
     var serializedForm = Serialize(this.refs.routeLabelForm, {hash: true})
-    // $.post(this.props.routeLabelSource, serializedForm, (resp)=> {
-    //   alert("Route successfully submitted. Thank you!");
-    //   this.directToAllRoutes();
-    //   console.log("sent label form");
-    // });
 
     $.ajax({
       url: this.props.routeLabelSource,
