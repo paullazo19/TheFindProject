@@ -135,8 +135,7 @@ export default React.createClass({
     return (
       <div className="wrapper">
         <Header/>
-        <h2>steps: {this.currentSteps}</h2>
-        <h2>cluster: {stepCluster}</h2>
+        <p>Please walk at a casual pace holding the device steadily in front of you. When you&rsquo;ve completed the route, press the button below.</p>
         <form method="POST" action="#" ref="routePathForm" onSubmit={this.submitRoutePath}>
           <input className="input--hidden" type="text" name="route" value={stepCluster} readOnly/>
           <input className="submit" type="submit" ref="endRoute" value="end route" />

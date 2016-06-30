@@ -14,7 +14,7 @@ export default React.createClass({
       <div className="wrapper">
         <Header/>
         <Link className="startNavigation--back" to={`/AllRoutes/${this.props.params.path_id}/${this.props.params.ft}/${this.props.params.in}`}>Back</Link>
-        <p className="startNavigation--warning">To ensure the best navigation experience, please begin navigation inside the building at the main entrance with your back to the door. Thank you.</p>
+        <p className="startNavigation--warning">The numbers you will hear once you begin navigating are the number of steps you need to take. To ensure the best navigation experience, please begin navigation inside the building at the main entrance with your back to the door. Thank you.</p>
         <a className="startNavigation--button" ref="startNav" onClick={this.startNav}>Start Navigation</a>
       </div>
     )
