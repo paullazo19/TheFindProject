@@ -11,8 +11,8 @@ export default React.createClass({
   getDefaultProps(){
     return {
       RoutesData: RoutesData,
-      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path",
-      routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label"
+      routePathSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-path2",
+      routeLabelSource: "https://tiny-tiny.herokuapp.com/collections/TFP-route-label2"
     }
   },
   getInitialState(){
