@@ -4,6 +4,10 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router'
 import Validator from 'validator'
 import Header from './Header'
 
+var wnt = {};
+    wnt.mobile = false;
+    wnt.ie = false;
+
 export default React.createClass({
   getInitialState(){
     return{
@@ -11,6 +15,24 @@ export default React.createClass({
       inches: 0,
       feetError: 0,
       inchesError: 0
+    }
+  },
+  componentDidMount(){
+    // used device detection from: http://fiddle.jshell.net/webninjataylor/4AYCS/light/
+
+    /******** DEVICE TYPE AND IE DETECTION ********/
+    if( navigator.userAgent.match(/Android/i)
+     || navigator.userAgent.match(/webOS/i)
+     || navigator.userAgent.match(/iPhone/i)
+     || navigator.userAgent.match(/iPad/i)
+     || navigator.userAgent.match(/iPod/i)
+     || navigator.userAgent.match(/BlackBerry/i)
+     ){
+    	wnt.mobile = true;
+    } else if (navigator.userAgent.match(/MSIE/i)){
+    		wnt.ie = true;
+    } else {
+    	alert('Sorry, this app is for mobile devices with location services only to be able to create and navigate routes.');
     }
   },
   handleFeetInput(e){

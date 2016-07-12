@@ -1,5 +1,31 @@
 export default [
   {
+    "_id":"5776ff3f0117310300624033",
+    "route[0][value]":"1",
+    "route[0][heading]":"",
+    "route[1][value]":"1",
+    "route[1][heading]":"14.765625",
+    "route[2][value]":"1",
+    "route[2][heading]":"287.578125"},
+  {
+    // printed: 2, turn right
+    // expected: 2, turn right, 1, turn right, 3
+    "_id":"5776e8830117310300624025",
+    "route[0][value]":"1",
+    "route[0][heading]":"159.9609375",
+    "route[1][value]":"1",
+    "route[1][heading]":"256.9921875",
+    "route[2][value]":"1",
+    "route[2][heading]":"20.0390625",
+    "route[3][value]":"1",
+    "route[3][heading]":"20.390625",
+    "route[4][value]":"1",
+    "route[4][heading]":"20.390625",
+    "route[5][value]":"1",
+    "route[5][heading]":"20.390625"
+  },
+  {
+    // expected:
     "_id":"57751334c3bf600300058143",
     "route[0][value]":"1",
     "route[0][heading]":"81.9140625",
