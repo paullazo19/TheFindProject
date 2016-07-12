@@ -7,6 +7,7 @@ import $ from 'jquery'
 import Header from './Header'
 
 var route = [];
+var routeValue;
 var stepHeading;
 var array = [];
 
@@ -99,10 +100,10 @@ export default React.createClass({
     }
     turn = Math.abs(turn);
 
-    if (turn >= 240 && turn <= 300) {
+    if (turn >= 225 && turn <= 315) {
       this.turnDetected = "turn right";
     }
-    if (turn >= 60 && turn <= 120) {
+    if (turn >= 45 && turn <= 135) {
       this.turnDetected = "turn left";
     }
   },
@@ -130,7 +131,7 @@ export default React.createClass({
         difference = difference - 360;
       }
       difference = Math.abs(difference);
-      if (difference >= 240 && difference <= 300) {
+      if (difference >= 225 && difference <= 315) {
 
         if (isNaN(adjustedStepCluster) === true) {
           previousStepCluster = 0;
@@ -145,7 +146,7 @@ export default React.createClass({
         route.push(adjustedStepCluster);
         route.push("turn right");
       }
-      if (difference >= 60 && difference <= 120) {
+      if (difference >= 45 && difference <= 135) {
 
           if (isNaN(adjustedStepCluster) === true) {
             previousStepCluster = 0;
@@ -161,9 +162,31 @@ export default React.createClass({
           route.push("turn left");
       }
     })
+    // totalClusters += adjustedStepCluster;
+    routeValue = route;
+    routeValue = $.grep(routeValue, (n, i)=> {
+      return (i % 2 == 0)
+    });
+
+    routeValue = routeValue.reduce(function(previousValue, currentValue, currentIndex, array) {
+      return previousValue + currentValue;
+    });
+
+    // console.log("route", route, "length", array.length, "routeValue", routeValue);
+    // console.log("last input", array.length - routeValue);
+
+    console.log(route[route.length - 1], typeof(route[route.length - 1]));
+    if (typeof(route[route.length - 1]) === "string") {
+      console.log("prev", previousStepCluster, "current", currentStepCluster, "adj", adjustedStepCluster);
+      if ((array.length - currentStepCluster) != 0) {
+          route.push(array.length - currentStepCluster)
+      }
+    }
+    console.log("route", route);
+    // console.log(route[1], typeof(route[1]));
   },
   navigateRoute(){
-    console.log("route:", route );
+    // console.log("route:", route );
     if (this.currentSteps >= route[this.state.segment]) {
 
       this.setState({
